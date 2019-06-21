@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ScoDash  Android</string>
+    <string name="new_dashboard">New dashboard</string>
 </resources>

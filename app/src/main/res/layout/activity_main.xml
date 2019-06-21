@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <include
-        layout="@layout/toolbar_main"
+        layout="@layout/toolbar_logo_button"
         android:id="@+id/toolbar"
         />
 
