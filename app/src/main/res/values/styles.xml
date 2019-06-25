@@ -4,10 +4,15 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorGrayBackground</item>
-        <item name="colorButtonNormal">@color/colorButtonNormal</item>
+        <item name="colorButtonNormal">@color/colorButton</item>
+        <item name="android:textColor">@color/colorTextButton</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ButtonColor" parent="@android:style/Widget.Button">
+        <!--<item name="android:textColor">@color/colorButton</item>-->
     </style>
 
 </resources>
