@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_create_dashboard"
         android:title="@string/new_dashboard"
-        android:icon="@drawable/baseline_add_black_18dp"
+        android:icon="@drawable/round_add_black_36"
         app:showAsAction="always"
         />
 </menu>
