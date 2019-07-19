@@ -27,21 +27,13 @@
 
         <ImageButton
             style="@style/BackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:src="@drawable/outline_keyboard_arrow_left_black_36"
-            android:textColor="@color/colorTextButton" />
-
+            android:layout_height="match_parent"
+            android:layout_gravity="left" />
 
         <Button
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:drawableEnd="@drawable/outline_keyboard_arrow_right_white_36"
-            android:text="Next step"
-            android:textColor="@color/colorTextButton" />
+            style="@style/NextButton"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
 
 
     </FrameLayout>
