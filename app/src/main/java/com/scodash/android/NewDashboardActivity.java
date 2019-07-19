@@ -10,8 +10,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 
 public class NewDashboardActivity extends AppCompatActivity {
+
+    public static final int NAME_TAB_POSITION = 0;
+    public static final int ITEMS_TAB_POSITION = 1;
+    public static final int AUTHOR_TAB_POSITION = 2;
+
+    private ViewPager viewPager;
+    private StepsPageAdapter stepsPageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +34,44 @@ public class NewDashboardActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        StepsPageAdapter stepsPageAdapter = new StepsPageAdapter(getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.pager);
+        stepsPageAdapter = new StepsPageAdapter(getSupportFragmentManager());
+        viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(stepsPageAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
+        for(int i = 0; i < tabStrip.getChildCount(); i++) {
+            tabStrip.getChildAt(i).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
+        }
+
+
+    }
+
+    public void nameStepNextButtonClicked(View view) {
+        viewPager.setCurrentItem(ITEMS_TAB_POSITION);
+    }
+
+    public void itemsStepPrevButtonClicked(View view) {
+        viewPager.setCurrentItem(NAME_TAB_POSITION);
+    }
+
+    public void itemsStepNextButtonClicked(View view) {
+        viewPager.setCurrentItem(AUTHOR_TAB_POSITION);
+    }
+
+    public void authorStepPrevButtonClicked(View view) {
+        viewPager.setCurrentItem(ITEMS_TAB_POSITION);
+    }
+
+    public void authorStepNextButtonClicked(View view) {
+        // TODO finish dashboard creation
     }
 
     private class StepsPageAdapter extends FragmentPagerAdapter {
@@ -43,11 +84,11 @@ public class NewDashboardActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
+                case NAME_TAB_POSITION:
                     return new DashboardNameFragment();
-                case 1:
+                case ITEMS_TAB_POSITION:
                     return new DashboardItemsFragment();
-                case 2:
+                case AUTHOR_TAB_POSITION:
                     return new DashboardAuthorFragment();
             }
             return null;
@@ -57,11 +98,11 @@ public class NewDashboardActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
+                case NAME_TAB_POSITION:
                     return getResources().getText(R.string.dashboard_name_tab);
-                case 1:
+                case ITEMS_TAB_POSITION:
                     return getResources().getText(R.string.dashboard_items_tab);
-                case 2:
+                case AUTHOR_TAB_POSITION:
                     return getResources().getText(R.string.dashboard_author_tab);
             }
             return null;
@@ -72,5 +113,7 @@ public class NewDashboardActivity extends AppCompatActivity {
         public int getCount() {
             return 3;
         }
+
+
     }
 }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    tools:context=".DashboardNameFragment">
+    tools:context=".NewDashboardActivity">
 
     <EditText
         android:layout_width="match_parent"
@@ -25,13 +25,9 @@
         android:layout_margin="16dp"
         >
 
-        <ImageButton
-            style="@style/BackButton"
-            android:layout_height="match_parent"
-            android:layout_gravity="left" />
-
         <Button
             style="@style/NextButton"
+            android:onClick="nameStepNextButtonClicked"
             android:layout_height="match_parent"
             android:layout_gravity="right" />
 

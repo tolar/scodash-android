@@ -18,14 +18,16 @@
         <item name="android:background">@drawable/imageview_shadow_border</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">0dp</item>
     </style>
 
     <style name="NextButton" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/colorTextButton</item>
         <item name="android:drawableEnd">@drawable/outline_keyboard_arrow_right_white_36</item>
-        <item name="android:text">Next step</item>
+        <item name="android:text">@string/next_step</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
 
 </resources>

@@ -3,11 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DashboardAuthorFragment">
+    tools:context=".NewDashboardActivity">
 
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Who you are" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        >
+
+        <ImageButton
+            style="@style/BackButton"
+            android:onClick="authorStepPrevButtonClicked"
+            android:layout_height="match_parent"
+            android:layout_gravity="left" />
+
+        <Button
+            style="@style/NextButton"
+            android:onClick="authorStepNextButtonClicked"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+
+
+    </FrameLayout>
 
 </FrameLayout>

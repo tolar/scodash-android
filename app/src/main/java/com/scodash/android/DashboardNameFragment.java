@@ -15,4 +15,5 @@ public class DashboardNameFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_dashboard_name, container, false);
     }
 
+
 }
