@@ -6,14 +6,14 @@
         <item name="colorPrimary">@color/colorGrayBackground</item>
         <item name="colorButtonNormal">@color/colorButton</item>
         <item name="colorAccent">@color/colorButton</item>
-        <item name="android:textColor">@color/colorTextButton</item>
+        <item name="android:textColor">@color/colorText</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!--<style name="ButtonColor" parent="@android:style/Widget.Button">-->
-        <!--<item name="android:textColor">@color/colorButton</item>-->
-    <!--</style>-->
+    <style name="BackButton" parent="Base.Widget.AppCompat.ImageButton">
+        <item name="android:colorBackground">@color/colorWhiteBackground</item>
+    </style>
 
 </resources>

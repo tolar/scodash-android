@@ -2,5 +2,7 @@
 <resources>
     <color name="colorButton">#0077c0</color>
     <color name="colorGrayBackground">#EEEEEE</color>
+    <color name="colorWhiteBackground">#FFFFFF</color>
+    <color name="colorText">#000000</color>
     <color name="colorTextButton">#FFFFFF</color>
 </resources>
