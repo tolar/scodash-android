@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="Dashboard's name" />
+        android:hint="@string/dashboard_name_hint" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="Dashboard's description (optional)" />
+        android:hint="@string/dashboard_description_hint" />
 
     <FrameLayout
         android:layout_width="match_parent"

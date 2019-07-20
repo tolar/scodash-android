@@ -8,5 +8,7 @@
     <string name="dashboard_author_tab">Author</string>
 
     <string name="next_step">Next step</string>
+    <string name="dashboard_name_hint">Dashboard\'s name</string>
+    <string name="dashboard_description_hint">Dashboard\'s description (optional)</string>
 
 </resources>
