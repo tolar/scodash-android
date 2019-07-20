@@ -9,7 +9,9 @@
     <ListView
         android:id="@+id/items"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content">
+
+    </ListView>
 
     <FrameLayout
     android:layout_width="match_parent"
