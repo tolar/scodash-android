@@ -23,7 +23,7 @@ public class DashboardItemsFragment extends Fragment {
 //        itemsView.setAdapter(adapter);
 
         RecyclerView itemsRecyler = (RecyclerView)rootView.findViewById(R.id.items);
-        DashboardItemsAdapter adapter = new DashboardItemsAdapter(NewDashboard.items);
+        DashboardItemsAdapter adapter = new DashboardItemsAdapter(new String[] {"ssss", "www"});
         itemsRecyler.setAdapter(adapter);
 
         return rootView;
