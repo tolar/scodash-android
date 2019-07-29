@@ -8,27 +8,28 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/items"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    >
+    <!--<FrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="26dp"-->
+    <!--&gt;-->
 
-        <ImageButton
-            style="@style/BackButton"
-            android:onClick="itemsStepPrevButtonClicked"
-            android:layout_height="match_parent"
-            android:layout_gravity="left" />
+        <!--<ImageButton-->
+            <!--style="@style/BackButton"-->
+            <!--android:onClick="itemsStepPrevButtonClicked"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left" />-->
 
-        <Button
-            style="@style/NextButton"
-            android:onClick="itemsStepNextButtonClicked"
-            android:layout_height="match_parent"
-            android:layout_gravity="right" />
+        <!--<Button-->
+            <!--style="@style/NextButton"-->
+            <!--android:onClick="itemsStepNextButtonClicked"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="right" />-->
 
 
-    </FrameLayout>
+    <!--</FrameLayout>-->
 </LinearLayout>
