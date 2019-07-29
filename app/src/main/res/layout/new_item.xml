@@ -16,6 +16,7 @@
 
        <TextView
             android:id="@+id/item_name"
+            android:layout_weight="9"
             android:gravity="center_vertical"
             android:layout_margin="5dp"
             android:layout_marginLeft="10dp"
@@ -23,7 +24,7 @@
             android:layout_height="wrap_content" />
 
         <ImageButton
-            android:layout_gravity="right"
+            android:layout_weight="1"
             style="@style/BackButton"
              />
 
