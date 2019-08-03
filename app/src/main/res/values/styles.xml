@@ -21,6 +21,14 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="RemoveButton" parent="@style/Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/outline_keyboard_arrow_left_black_36</item>
+        <item name="android:background">@drawable/baseline_clear_black_36</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
     <style name="NextButton" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/colorTextButton</item>
         <item name="android:drawableEnd">@drawable/outline_keyboard_arrow_right_white_36</item>
