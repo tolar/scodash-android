@@ -1,21 +1,18 @@
 package com.scodash.android;
 
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 
-    private String[] names;
-
-    public DashboardItemsAdapter(String[] names) {
-        this.names = names;
+    public DashboardItemsAdapter() {
     }
 
     @NonNull
@@ -28,13 +25,13 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         CardView itemView = viewHolder.itemView;
-        //TextView textView = itemView.findViewById(R.id.item_name);
-        //textView.setText(names[i]);
+        TextView textView = itemView.findViewById(R.id.item_name);
+        textView.setText(NewDashboard.getInstance().getItems().get(i));
     }
 
     @Override
     public int getItemCount() {
-        return names.length;
+        return NewDashboard.getInstance().getItems().size();
     }
 
 

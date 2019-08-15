@@ -1,5 +1,6 @@
 package com.scodash.android;
 
+import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 public class NewDashboardActivity extends AppCompatActivity {
@@ -22,6 +24,7 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private StepsPageAdapter stepsPageAdapter;
+    private DashboardItemsFragment dashboardItemsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class NewDashboardActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        stepsPageAdapter = new StepsPageAdapter(getSupportFragmentManager());
+        stepsPageAdapter = new StepsPageAdapter(getSupportFragmentManager(), this);
         viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(stepsPageAdapter);
 
@@ -51,6 +54,7 @@ public class NewDashboardActivity extends AppCompatActivity {
             });
         }
 
+        dashboardItemsFragment = new DashboardItemsFragment();
 
     }
 
@@ -74,10 +78,19 @@ public class NewDashboardActivity extends AppCompatActivity {
         // TODO finish dashboard creation
     }
 
+    public void addItem(View view) {
+        EditText editText = view.findViewById(R.id.new_item_name);
+        NewDashboard.getInstance().addItem(editText.getText().toString());
+        dashboardItemsFragment.notifyItemsChanged();
+    }
+
     private class StepsPageAdapter extends FragmentPagerAdapter {
 
-        public StepsPageAdapter(FragmentManager fm) {
+        private final Activity parentActivity;
+
+        public StepsPageAdapter(FragmentManager fm, Activity parentActivity) {
             super(fm);
+            this.parentActivity = parentActivity;
         }
 
         @Nullable
@@ -87,7 +100,7 @@ public class NewDashboardActivity extends AppCompatActivity {
                 case NAME_TAB_POSITION:
                     return new DashboardNameFragment();
                 case ITEMS_TAB_POSITION:
-                    return new DashboardItemsFragment();
+                    return dashboardItemsFragment;
                 case AUTHOR_TAB_POSITION:
                     return new DashboardAuthorFragment();
             }

@@ -1,40 +1,40 @@
 package com.scodash.android;
 
-import android.content.Context;
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 
 public class DashboardItemsFragment extends Fragment {
+
+    private DashboardItemsAdapter itemsAdapter;
+
+    public DashboardItemsFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dashboard_items, container, false);
-//        ListView itemsView = rootView.findViewById(R.id.items);
-//        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, NewDashboard.items);
-//        itemsView.setAdapter(adapter);
 
         RecyclerView itemsRecyler = rootView.findViewById(R.id.items);
-        DashboardItemsAdapter adapter = new DashboardItemsAdapter(new String[] {"aaa", "www", "ddd"});
-        itemsRecyler.setAdapter(adapter);
+        itemsAdapter = new DashboardItemsAdapter();
+        itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         itemsRecyler.setLayoutManager(layoutManager);
 
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        itemsRecyler.setLayoutManager(gridLayoutManager);
-
         return rootView;
+    }
+
+    public void notifyItemsChanged() {
+        itemsAdapter.notifyDataSetChanged();
     }
 
 }
