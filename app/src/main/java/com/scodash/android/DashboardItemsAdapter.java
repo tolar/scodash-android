@@ -26,7 +26,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         CardView itemView = viewHolder.itemView;
         TextView textView = itemView.findViewById(R.id.item_name);
-        textView.setText(NewDashboard.getInstance().getItems().get(i));
+        textView.setText((String)NewDashboard.getInstance().getItems().toArray()[i]);
     }
 
     @Override

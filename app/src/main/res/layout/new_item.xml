@@ -25,7 +25,9 @@
         <ImageButton
             style="@style/RemoveButton"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="removeItem"
+            />
     </LinearLayout>
 
 

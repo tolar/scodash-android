@@ -11,8 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -59,6 +61,10 @@ public class NewDashboardActivity extends AppCompatActivity {
     }
 
     public void nameStepNextButtonClicked(View view) {
+        EditText nameEditText = findViewById(R.id.name);
+        NewDashboard.getInstance().setName(nameEditText.toString());
+        EditText descriptionEditText = findViewById(R.id.description);
+        NewDashboard.getInstance().setDescription(descriptionEditText.toString());
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
     }
 
@@ -79,8 +85,16 @@ public class NewDashboardActivity extends AppCompatActivity {
     }
 
     public void addItem(View view) {
-        EditText editText = view.findViewById(R.id.new_item_name);
+        EditText editText = findViewById(R.id.new_item_name);
         NewDashboard.getInstance().addItem(editText.getText().toString());
+        editText.setText("");
+        dashboardItemsFragment.notifyItemsChanged();
+    }
+
+    public void removeItem(View view) {
+        ViewParent viewParent = view.getParent();
+        EditText itemEdit = ((LinearLayout)viewParent).findViewById(R.id.item_name);
+        NewDashboard.getInstance().removeItem(itemEdit.getText().toString());
         dashboardItemsFragment.notifyItemsChanged();
     }
 
