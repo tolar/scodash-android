@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,8 +19,6 @@ import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.Collections;
 
 public class NewDashboardActivity extends AppCompatActivity {
 
@@ -52,6 +49,7 @@ public class NewDashboardActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        // to disable tab clicking
         LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
         for(int i = 0; i < tabStrip.getChildCount(); i++) {
             tabStrip.getChildAt(i).setOnTouchListener(new View.OnTouchListener() {
@@ -81,16 +79,31 @@ public class NewDashboardActivity extends AppCompatActivity {
     }
 
     public void itemsStepPrevButtonClicked(View view) {
+        dismissNoItemSnackbar();
         viewPager.setCurrentItem(NAME_TAB_POSITION);
     }
 
     public void itemsStepNextButtonClicked(View view) {
         if (NewDashboard.getInstance().getItems().isEmpty()) {
-            noItemSnackbard = Snackbar.make(findViewById(R.id.items), R.string.no_empty_items, Snackbar.LENGTH_INDEFINITE);
+            getNoItemSnackbar();
             noItemSnackbard.show();
             return;
         }
         viewPager.setCurrentItem(AUTHOR_TAB_POSITION);
+    }
+
+    private Snackbar getNoItemSnackbar() {
+        if (noItemSnackbard != null) {
+            return noItemSnackbard;
+        }
+        noItemSnackbard = Snackbar.make(findViewById(R.id.items), R.string.no_empty_items, Snackbar.LENGTH_INDEFINITE);
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        View snackbarView = noItemSnackbard.getView();
+        snackbarView.findViewById(snackbarTextId);
+        TextView snackbarTextView = snackbarView.findViewById(snackbarTextId);
+        snackbarTextView.setTextColor(getResources().getColor(R.color.colorErrorText));
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorErrorBackground));
+        return noItemSnackbard;
     }
 
     public void authorStepPrevButtonClicked(View view) {
@@ -103,12 +116,21 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     public void addItem(View view) {
         EditText editText = findViewById(R.id.new_item_name);
-        NewDashboard.getInstance().addItem(editText.getText().toString());
-        editText.setText("");
-        if (noItemSnackbard != null && noItemSnackbard.isShown()) {
-            noItemSnackbard.dismiss();
+        String item = editText.getText().toString();
+        if (!TextUtils.isEmpty(item)) {
+            NewDashboard.getInstance().addItem(item);
+            editText.setText("");
+            dismissNoItemSnackbar();
+            dashboardItemsFragment.notifyItemsChanged();
         }
-        dashboardItemsFragment.notifyItemsChanged();
+    }
+
+    private void dismissNoItemSnackbar() {
+        getNoItemSnackbar().dismiss();
+    }
+
+    private void showNoItemSnackbar() {
+        getNoItemSnackbar().show();
     }
 
     public void removeItem(View view) {

@@ -3,16 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:orientation="vertical"
     tools:context=".NewDashboardActivity">
 
-    <EditText
-        android:id="@+id/name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="@string/dashboard_name_hint" />
+        app:errorTextAppearance="@style/ErrorText"
+        app:errorEnabled="true">
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:hint="@string/dashboard_name_hint" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:errorTextAppearance="@style/ErrorText"
+        app:errorEnabled="true">
 
     <EditText
         android:id="@+id/description"
@@ -20,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="@string/dashboard_description_hint" />
+    </android.support.design.widget.TextInputLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

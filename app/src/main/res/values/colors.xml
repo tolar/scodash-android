@@ -5,4 +5,6 @@
     <color name="colorWhiteBackground">#FFFFFF</color>
     <color name="colorText">#000000</color>
     <color name="colorTextButton">#FFFFFF</color>
+    <color name="colorErrorText">#E53935</color>
+    <color name="colorErrorBackground">#FFEBEE</color>
 </resources>

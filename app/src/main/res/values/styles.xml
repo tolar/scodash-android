@@ -53,4 +53,9 @@
         <item name="android:text">@string/create_dashboard</item>
     </style>
 
+    <style name="ErrorText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorErrorText</item>
+    </style>
+
+
 </resources>
