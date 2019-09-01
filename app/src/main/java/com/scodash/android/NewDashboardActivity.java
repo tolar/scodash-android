@@ -2,6 +2,7 @@ package com.scodash.android;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,11 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.Collections;
 
 public class NewDashboardActivity extends AppCompatActivity {
 
@@ -27,6 +32,7 @@ public class NewDashboardActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private StepsPageAdapter stepsPageAdapter;
     private DashboardItemsFragment dashboardItemsFragment;
+    private Snackbar noItemSnackbard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +68,15 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     public void nameStepNextButtonClicked(View view) {
         EditText nameEditText = findViewById(R.id.name);
-        NewDashboard.getInstance().setName(nameEditText.toString());
+        String name = nameEditText.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            nameEditText.setError(getString(R.string.dashboard_name_mandatory));
+            return;
+        }
+        NewDashboard.getInstance().setName(name);
         EditText descriptionEditText = findViewById(R.id.description);
-        NewDashboard.getInstance().setDescription(descriptionEditText.toString());
+        String description = descriptionEditText.getText().toString();
+        NewDashboard.getInstance().setDescription(description);
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
     }
 
@@ -73,6 +85,11 @@ public class NewDashboardActivity extends AppCompatActivity {
     }
 
     public void itemsStepNextButtonClicked(View view) {
+        if (NewDashboard.getInstance().getItems().isEmpty()) {
+            noItemSnackbard = Snackbar.make(findViewById(R.id.items), R.string.no_empty_items, Snackbar.LENGTH_INDEFINITE);
+            noItemSnackbard.show();
+            return;
+        }
         viewPager.setCurrentItem(AUTHOR_TAB_POSITION);
     }
 
@@ -88,13 +105,16 @@ public class NewDashboardActivity extends AppCompatActivity {
         EditText editText = findViewById(R.id.new_item_name);
         NewDashboard.getInstance().addItem(editText.getText().toString());
         editText.setText("");
+        if (noItemSnackbard != null && noItemSnackbard.isShown()) {
+            noItemSnackbard.dismiss();
+        }
         dashboardItemsFragment.notifyItemsChanged();
     }
 
     public void removeItem(View view) {
         ViewParent viewParent = view.getParent();
-        EditText itemEdit = ((LinearLayout)viewParent).findViewById(R.id.item_name);
-        NewDashboard.getInstance().removeItem(itemEdit.getText().toString());
+        TextView itemToRemove = ((LinearLayout)viewParent).findViewById(R.id.item_name);
+        NewDashboard.getInstance().removeItem(itemToRemove.getText().toString());
         dashboardItemsFragment.notifyItemsChanged();
     }
 

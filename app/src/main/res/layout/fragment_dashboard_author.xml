@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
     tools:context=".NewDashboardActivity">
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="@string/author_name_hint" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="@string/author_email_hint" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        >
+        android:layout_margin="16dp">
+
+        <Button
+            style="@style/CreateDashboardButton"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:onClick="authorStepNextButtonClicked" />
 
         <ImageButton
             style="@style/BackButton"
-            android:onClick="authorStepPrevButtonClicked"
             android:layout_height="match_parent"
-            android:layout_gravity="left" />
-
-        <Button
-            style="@style/NextButton"
-            android:onClick="authorStepNextButtonClicked"
-            android:layout_height="match_parent"
-            android:layout_gravity="right" />
+            android:layout_gravity="left"
+            android:onClick="authorStepPrevButtonClicked" />
 
 
     </FrameLayout>
 
-</FrameLayout>
+</LinearLayout>
