@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -68,7 +69,8 @@ public class NewDashboardActivity extends AppCompatActivity {
         EditText nameEditText = findViewById(R.id.name);
         String name = nameEditText.getText().toString();
         if (TextUtils.isEmpty(name)) {
-            nameEditText.setError(getString(R.string.dashboard_name_mandatory));
+            TextInputLayout nameInputLayout = findViewById(R.id.name_input_layout);
+            nameInputLayout.setError(getString(R.string.dashboard_name_mandatory));
             return;
         }
         NewDashboard.getInstance().setName(name);
