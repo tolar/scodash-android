@@ -18,6 +18,11 @@ public class DashboardNameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard_name, container, false);
+        attachTextChangeListener(view);
+        return view;
+    }
+
+    private void attachTextChangeListener(View view) {
         EditText editName = view.findViewById(R.id.name);
         final TextInputLayout editNameTil = view.findViewById(R.id.name_input_layout);
         editName.addTextChangedListener(new TextWatcher() {
@@ -37,10 +42,7 @@ public class DashboardNameFragment extends Fragment {
             public void afterTextChanged(Editable s) {
             }
         });
-        return view;
     }
-
-
 
 
 }

@@ -11,10 +11,13 @@
     <string name="next_step">Next step</string>
     <string name="dashboard_name_hint">Dashboard name</string>
     <string name="dashboard_description_hint">Dashboard description (optional)</string>
-    <string name="dashboard_name_mandatory">Dashboard name must be defined.</string>
-    <string name="no_empty_items">At least one item must be specified on dashboard.</string>
+    <string name="dashboard_name_mandatory">Dashboard name required</string>
+    <string name="no_empty_items">At least one item required</string>
     <string name="author_email_hint">E-mail</string>
     <string name="author_name_hint">Name</string>
     <string name="create_dashboard">Create dashboard</string>
+    <string name="author_name_mandatory">Name required</string>
+    <string name="author_email_mandatory">Email required</string>
+    <string name="not_valid_email">Not valid email</string>
 
 </resources>

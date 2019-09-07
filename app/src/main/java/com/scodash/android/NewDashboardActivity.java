@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
@@ -112,7 +113,31 @@ public class NewDashboardActivity extends AppCompatActivity {
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
     }
 
-    public void authorStepNextButtonClicked(View view) {
+    public void authorCreateDashboardlicked(View view) {
+
+        boolean validationOk = true;
+        EditText authorNameEditText = findViewById(R.id.author_name);
+        String name = authorNameEditText.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            TextInputLayout authorNameInputLayout = findViewById(R.id.author_name_input_layout);
+            authorNameInputLayout.setError(getString(R.string.author_name_mandatory));
+            validationOk = false;
+        }
+        EditText authorEmailEditText = findViewById(R.id.author_email);
+        String email = authorEmailEditText.getText().toString();
+        TextInputLayout authorEmailInputLayout = findViewById(R.id.author_email_input_layout);
+        if (TextUtils.isEmpty(email)) {
+            authorEmailInputLayout.setError(getString(R.string.author_email_mandatory));
+            validationOk = false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            authorEmailInputLayout.setError(getString(R.string.not_valid_email));
+            validationOk = false;
+        }
+        if (validationOk) {
+            NewDashboard.getInstance().setAuthorName(name);
+            NewDashboard.getInstance().setAuthorEmail(email);
+        }
+
         // TODO finish dashboard creation
     }
 

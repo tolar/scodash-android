@@ -15,9 +15,9 @@ public class NewDashboard {
 
     private String description;
 
-    private String owner;
+    private String authorName;
 
-    private String email;
+    private String authorEmail;
 
 
     public static NewDashboard getInstance() {
@@ -60,19 +60,19 @@ public class NewDashboard {
         this.description = description;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 }
