@@ -1,7 +1,5 @@
-package com.scodash.android;
+package com.scodash.android.activities;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 

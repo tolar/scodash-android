@@ -1,4 +1,4 @@
-package com.scodash.android;
+package com.scodash.android.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import com.scodash.android.R;
 
 
 public class DashboardAuthorFragment extends Fragment {

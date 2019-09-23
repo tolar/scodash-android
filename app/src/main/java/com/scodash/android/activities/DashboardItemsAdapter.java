@@ -1,4 +1,4 @@
-package com.scodash.android;
+package com.scodash.android.activities;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -7,8 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.scodash.android.R;
 
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 

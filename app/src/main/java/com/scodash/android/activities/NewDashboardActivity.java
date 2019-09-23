@@ -1,6 +1,7 @@
-package com.scodash.android;
+package com.scodash.android.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -21,6 +22,10 @@ import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.scodash.android.R;
+import com.scodash.android.services.dto.DashboardId;
+import com.scodash.android.services.impl.ScodashServiceImpl;
 
 public class NewDashboardActivity extends AppCompatActivity {
 
@@ -138,7 +143,12 @@ public class NewDashboardActivity extends AppCompatActivity {
             NewDashboard.getInstance().setAuthorEmail(email);
         }
 
-        // TODO finish dashboard creation
+        DashboardId dashboardId = ScodashServiceImpl.getInstance().createDashboard(NewDashboard.getInstance());
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra("writeHash", dashboardId.getWriteHash());
+        intent.putExtra("readHash", dashboardId.getReadHash());
+        startActivity(intent);
+
     }
 
     public void addItem(View view) {
