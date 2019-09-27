@@ -141,13 +141,15 @@ public class NewDashboardActivity extends AppCompatActivity {
         if (validationOk) {
             NewDashboard.getInstance().setAuthorName(name);
             NewDashboard.getInstance().setAuthorEmail(email);
+
+            DashboardId dashboardId = ScodashServiceImpl.getInstance().createDashboard(NewDashboard.getInstance());
+            Intent intent = new Intent(this, DashboardActivity.class);
+            intent.putExtra("writeHash", dashboardId.getWriteHash());
+            intent.putExtra("readHash", dashboardId.getReadHash());
+            startActivity(intent);
         }
 
-        DashboardId dashboardId = ScodashServiceImpl.getInstance().createDashboard(NewDashboard.getInstance());
-        Intent intent = new Intent(this, DashboardActivity.class);
-        intent.putExtra("writeHash", dashboardId.getWriteHash());
-        intent.putExtra("readHash", dashboardId.getReadHash());
-        startActivity(intent);
+
 
     }
 
