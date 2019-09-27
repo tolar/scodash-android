@@ -14,17 +14,6 @@
         android:layout_marginBottom="5dp"
         android:scrollbars="vertical" />
 
-<!--    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_marginTop="0dp"-->
-<!--        android:layout_marginBottom="5dp"-->
-<!--        android:layout_marginLeft="16dp"-->
-<!--        android:layout_marginRight="16dp"-->
-<!--        card_view:cardCornerRadius="4dp"-->
-<!--        card_view:cardElevation="2dp">-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

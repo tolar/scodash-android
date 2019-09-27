@@ -25,7 +25,7 @@ public class DashboardNameFragment extends Fragment {
     }
 
     private void attachTextChangeListener(View view) {
-        EditText editName = view.findViewById(R.id.name);
+        EditText editName = view.findViewById(R.id.dashboard_name);
         final TextInputLayout editNameTil = view.findViewById(R.id.name_input_layout);
         editName.addTextChangedListener(new TextWatcher() {
             @Override

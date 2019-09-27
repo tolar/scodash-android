@@ -72,7 +72,7 @@ public class NewDashboardActivity extends AppCompatActivity {
     }
 
     public void nameStepNextButtonClicked(View view) {
-        EditText nameEditText = findViewById(R.id.name);
+        EditText nameEditText = findViewById(R.id.dashboard_name);
         String name = nameEditText.getText().toString();
         if (TextUtils.isEmpty(name)) {
             TextInputLayout nameInputLayout = findViewById(R.id.name_input_layout);
@@ -80,7 +80,7 @@ public class NewDashboardActivity extends AppCompatActivity {
             return;
         }
         NewDashboard.getInstance().setName(name);
-        EditText descriptionEditText = findViewById(R.id.description);
+        EditText descriptionEditText = findViewById(R.id.dashboard_description);
         String description = descriptionEditText.getText().toString();
         NewDashboard.getInstance().setDescription(description);
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
@@ -144,8 +144,8 @@ public class NewDashboardActivity extends AppCompatActivity {
 
             DashboardId dashboardId = ScodashServiceImpl.getInstance().createDashboard(NewDashboard.getInstance());
             Intent intent = new Intent(this, DashboardActivity.class);
-            intent.putExtra("writeHash", dashboardId.getWriteHash());
-            intent.putExtra("readHash", dashboardId.getReadHash());
+            intent.putExtra(DashboardActivity.WRITE_HASH, dashboardId.getWriteHash());
+            intent.putExtra(DashboardActivity.READ_HASH, dashboardId.getReadHash());
             startActivity(intent);
         }
 

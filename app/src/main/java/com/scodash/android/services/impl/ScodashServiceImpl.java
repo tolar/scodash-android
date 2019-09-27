@@ -26,9 +26,7 @@ public class ScodashServiceImpl implements ScodashService {
     @Override
     public DashboardId createDashboard(Dashboard newDashboard) {
         Log.d("ScodashService", "createDashboard");
-        DashboardId dashboardId = new DashboardId();
-        dashboardId.setReadHash("aabbccdd");
-        dashboardId.setWriteHash("eeffgghh");
+        DashboardId dashboardId = new DashboardId("aaaaa", "bbbbb");
         dashboard = newDashboard;
         return dashboardId;
     }

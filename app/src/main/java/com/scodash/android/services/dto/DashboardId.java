@@ -5,7 +5,9 @@ public class DashboardId {
     private String writeHash;
     private String readHash;
 
-    public DashboardId() {
+    public DashboardId(String writeHash, String readHash) {
+        this.writeHash = writeHash;
+        this.readHash = readHash;
     }
 
     public String getWriteHash() {
