@@ -6,9 +6,6 @@ import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.ScodashService;
 import com.scodash.android.services.dto.DashboardId;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ScodashServiceImpl implements ScodashService {
 
     private static ScodashService scodashService;
