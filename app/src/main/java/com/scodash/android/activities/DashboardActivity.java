@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
@@ -31,6 +33,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         TextView descriptionView = findViewById(R.id.dashboard_description);
         descriptionView.setText(dashboard.getDescription());
+
+        RecyclerView itemsRecyler = findViewById(R.id.items);
+        itemsRecyler.setAdapter(new DashboardItemsAdapter(dashboard));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        itemsRecyler.setLayoutManager(layoutManager);
 
 
 }

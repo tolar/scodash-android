@@ -17,7 +17,7 @@ import com.scodash.android.R;
 
 public class DashboardItemsFragment extends Fragment {
 
-    private DashboardItemsAdapter itemsAdapter;
+    private NewDashboardItemsAdapter itemsAdapter;
 
     public DashboardItemsFragment() {
     }
@@ -37,8 +37,8 @@ public class DashboardItemsFragment extends Fragment {
     }
 
     private void attachItemsAdapter(View rootView) {
-        RecyclerView itemsRecyler = rootView.findViewById(R.id.items);
-        itemsAdapter = new DashboardItemsAdapter();
+        RecyclerView itemsRecyler = rootView.findViewById(R.id.new_items);
+        itemsAdapter = new NewDashboardItemsAdapter();
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

@@ -7,7 +7,7 @@
     tools:context=".activities.NewDashboardActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/items"
+        android:id="@+id/new_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

@@ -104,7 +104,7 @@ public class NewDashboardActivity extends AppCompatActivity {
         if (noItemSnackbard != null) {
             return noItemSnackbard;
         }
-        noItemSnackbard = Snackbar.make(findViewById(R.id.items), R.string.no_empty_items, Snackbar.LENGTH_INDEFINITE);
+        noItemSnackbard = Snackbar.make(findViewById(R.id.new_items), R.string.no_empty_items, Snackbar.LENGTH_INDEFINITE);
         int snackbarTextId = android.support.design.R.id.snackbar_text;
         View snackbarView = noItemSnackbard.getView();
         snackbarView.findViewById(snackbarTextId);

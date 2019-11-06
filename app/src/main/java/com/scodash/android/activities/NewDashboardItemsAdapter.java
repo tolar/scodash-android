@@ -8,20 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.scodash.android.R;
-import com.scodash.android.dto.Dashboard;
 
-public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
+public class NewDashboardItemsAdapter extends RecyclerView.Adapter<NewDashboardItemsAdapter.ViewHolder> {
 
-    private Dashboard dashboard;
-
-    public DashboardItemsAdapter(Dashboard dashboard) {
-        this.dashboard = dashboard;
+    public NewDashboardItemsAdapter() {
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.new_item, parent, false);
         return new ViewHolder(cardView);
     }
 
@@ -34,7 +30,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     @Override
     public int getItemCount() {
-        return dashboard.getItems().size();
+        return NewDashboard.getInstance().getItems().size();
     }
 
 
