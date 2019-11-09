@@ -2,7 +2,6 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorGrayBackground</item>
         <item name="colorButtonNormal">@color/colorButton</item>
         <item name="colorAccent">@color/colorButton</item>
@@ -37,9 +36,6 @@
         <item name="android:padding">0dp</item>
     </style>
 
-
-
-
     <style name="NextButton" parent="@style/Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/colorTextButton</item>
         <item name="android:drawableEnd">@drawable/outline_keyboard_arrow_right_white_36</item>
@@ -55,6 +51,27 @@
 
     <style name="ErrorText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/colorErrorText</item>
+    </style>
+
+    <style name="ScoreAddButton" parent="@style/Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/green_circle_background</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="ScoreRemoveButton" parent="@style/Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/red_circle_background</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="ScoreButton" parent="@style/Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/black_circle_background</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">0dp</item>
     </style>
 
 

@@ -4,7 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.scodash.android.R;
@@ -27,9 +32,49 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        CardView itemView = viewHolder.itemView;
-        TextView textView = itemView.findViewById(R.id.item_name);
-        textView.setText((String)NewDashboard.getInstance().getItems().toArray()[i]);
+        LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
+        // set item name
+        TextView textView = itemLineView.findViewById(R.id.item_name);
+        textView.setText((String)dashboard.getItems().toArray()[i]);
+
+        int fives = dashboard.getItems().size() / 5;
+        int rest = dashboard.getItems().size() % 5;
+
+//        ImageButton scoreRemovedBtn = new ImageButton(itemLineView.getContext());
+//        scoreRemovedBtn.setBackgroundResource(R.drawable.red_circle_background);
+//        itemLineView.addView(scoreRemovedBtn);
+//
+//        ImageButton scoreAddBtn = new ImageButton(itemLineView.getContext());
+//        scoreAddBtn.setBackgroundResource(R.drawable.green_circle_background);
+//        itemLineView.addView(scoreAddBtn);
+
+        for (int j = 0; j < fives; j++) {
+            ImageView fiveCommasView = new ImageView(itemLineView.getContext());
+            fiveCommasView.setImageResource(R.drawable.four_carky);
+            itemLineView.addView(fiveCommasView);
+        }
+        ImageView restCommasView = new ImageView(itemLineView.getContext());
+        if (rest > 0 && rest <= 5) {
+            int resourceId = -1;
+            switch (rest) {
+                case 1:
+                    resourceId = R.drawable.one_carka;
+                    break;
+                case 2:
+                    resourceId = R.drawable.two_carky;
+                    break;
+                case 3:
+                    resourceId = R.drawable.three_carky;
+                    break;
+                case 4:
+                    resourceId = R.drawable.four_carky;
+                    break;
+                case 5:
+                    resourceId = R.drawable.five_carek;
+                    break;
+            }
+            restCommasView.setImageResource(resourceId);
+        }
     }
 
     @Override

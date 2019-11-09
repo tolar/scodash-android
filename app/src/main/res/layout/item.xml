@@ -11,6 +11,7 @@
     card_view:cardElevation="2dp">
 
     <LinearLayout
+        android:id="@+id/item_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -21,7 +22,38 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-            android:layout_weight="9" />
+            android:layout_weight="1" />
+
+        <ImageButton
+            style="@style/ScoreRemoveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageButton
+            style="@style/ScoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageButton
+            style="@style/ScoreAddButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            />
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/item_commas"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="horizontal">-->
+<!--        </LinearLayout>-->
+
+
 
     </LinearLayout>
 

@@ -5,6 +5,12 @@
     <color name="colorWhiteBackground">#FFFFFF</color>
     <color name="colorText">#000000</color>
     <color name="colorTextButton">#FFFFFF</color>
+
     <color name="colorErrorText">#E53935</color>
     <color name="colorErrorBackground">#FFEBEE</color>
+
+    <color name="removeButtonColor">#e4004b</color>
+    <color name="addButtonColor">#74af28</color>
+    <color name="scoreButtonColor">#474747</color>
+
 </resources>
