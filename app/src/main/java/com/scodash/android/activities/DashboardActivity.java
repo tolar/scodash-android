@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 import com.scodash.android.R;
@@ -64,5 +66,13 @@ public class DashboardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void incScore(View view) {
+        Log.d("x", "incItem");
+    }
+
+    public void decScore(View view) {
+        Log.d("x", "decItem");
     }
 }

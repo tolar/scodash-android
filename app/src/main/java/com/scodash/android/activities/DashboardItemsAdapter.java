@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
+import com.scodash.android.dto.Item;
 
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 
@@ -34,19 +35,15 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
         // set item name
-        TextView textView = itemLineView.findViewById(R.id.item_name);
-        textView.setText((String)dashboard.getItems().toArray()[i]);
+        TextView nameTextView = itemLineView.findViewById(R.id.item_name);
+        Item item = (dashboard.getItems().toArray(new Item[0]))[i];
+        nameTextView.setText(item.getName());
+        // set item score
+        TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
+        scoreTextView.setText(String.valueOf(item.getScore()));
 
         int fives = dashboard.getItems().size() / 5;
         int rest = dashboard.getItems().size() % 5;
-
-//        ImageButton scoreRemovedBtn = new ImageButton(itemLineView.getContext());
-//        scoreRemovedBtn.setBackgroundResource(R.drawable.red_circle_background);
-//        itemLineView.addView(scoreRemovedBtn);
-//
-//        ImageButton scoreAddBtn = new ImageButton(itemLineView.getContext());
-//        scoreAddBtn.setBackgroundResource(R.drawable.green_circle_background);
-//        itemLineView.addView(scoreAddBtn);
 
         for (int j = 0; j < fives; j++) {
             ImageView fiveCommasView = new ImageView(itemLineView.getContext());

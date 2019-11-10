@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.scodash.android.R;
+import com.scodash.android.dto.Item;
 
 public class NewDashboardItemsAdapter extends RecyclerView.Adapter<NewDashboardItemsAdapter.ViewHolder> {
 
@@ -25,7 +26,7 @@ public class NewDashboardItemsAdapter extends RecyclerView.Adapter<NewDashboardI
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         CardView itemView = viewHolder.itemView;
         TextView textView = itemView.findViewById(R.id.item_name);
-        textView.setText((String)NewDashboard.getInstance().getItems().toArray()[i]);
+        textView.setText((NewDashboard.getInstance().getItems().toArray(new Item[0]))[i].getName());
     }
 
     @Override
