@@ -18,9 +18,10 @@
 
         <TextView
             android:id="@+id/item_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_weight="4"
             android:layout_margin="5dp"
              />
 
@@ -87,6 +88,14 @@
                 android:text="+" />
 
         </FrameLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:layout_gravity="center_vertical"
+            android:text="comma"
+            />
 
 
 
