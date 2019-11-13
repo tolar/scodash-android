@@ -22,13 +22,15 @@ public class DashboardActivity extends AppCompatActivity {
     public static final String WRITE_HASH = "writeHash";
     public static final String READ_HASH = "readHash";
 
+    private Dashboard dashboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         setupToolbar();
-        Dashboard dashboard = getDashboardFromIntent();
+        dashboard = getDashboardFromIntent();
 
         TextView nameView = findViewById(R.id.dashboard_name);
         nameView.setText(dashboard.getName());
@@ -70,6 +72,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     public void incScore(View view) {
         Log.d("x", "incItem");
+        //dashboard.
     }
 
     public void decScore(View view) {
