@@ -60,13 +60,16 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
             }
         });
 
-        int fives = dashboard.getItems().size() / 5;
-        int rest = dashboard.getItems().size() % 5;
+        LinearLayout commasView = itemLineView.findViewById(R.id.commas);
+        commasView.removeAllViews();
+
+        int fives = item.getScore() / 5;
+        int rest = item.getScore() % 5;
 
         for (int j = 0; j < fives; j++) {
             ImageView fiveCommasView = new ImageView(itemLineView.getContext());
-            fiveCommasView.setImageResource(R.drawable.four_carky);
-            itemLineView.addView(fiveCommasView);
+            fiveCommasView.setImageResource(R.drawable.five_carek);
+            commasView.addView(fiveCommasView);
         }
         ImageView restCommasView = new ImageView(itemLineView.getContext());
         if (rest > 0 && rest <= 5) {
@@ -90,6 +93,8 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
             }
             restCommasView.setImageResource(resourceId);
         }
+        commasView.addView(restCommasView);
+
     }
 
     @Override
