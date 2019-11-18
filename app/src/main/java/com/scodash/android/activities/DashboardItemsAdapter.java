@@ -36,11 +36,29 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
         LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
         // set item name
         TextView nameTextView = itemLineView.findViewById(R.id.item_name);
-        Item item = (dashboard.getItems().toArray(new Item[0]))[i];
+        final Item item = (dashboard.getItems().toArray(new Item[0]))[i];
         nameTextView.setText(item.getName());
         // set item score
         TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
         scoreTextView.setText(String.valueOf(item.getScore()));
+
+
+        itemLineView.findViewById(R.id.inc_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item.setScore(item.getScore()+1);
+                notifyDataSetChanged();
+            }
+        });
+        itemLineView.findViewById(R.id.dec_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (item.getScore() > 0) {
+                    item.setScore(item.getScore() - 1);
+                    notifyDataSetChanged();
+                }
+            }
+        });
 
         int fives = dashboard.getItems().size() / 5;
         int rest = dashboard.getItems().size() % 5;

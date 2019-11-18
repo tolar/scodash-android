@@ -31,12 +31,11 @@
             android:layout_gravity="center_vertical">
 
             <ImageButton
+                android:id="@+id/dec_btn"
                 style="@style/ScoreRemoveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:onClick="decScore"/>
-
+                android:layout_gravity="center_vertical"/>
             <TextView
                 style="@style/ScoreText"
                 android:layout_width="wrap_content"
@@ -73,6 +72,7 @@
             >
 
             <ImageButton
+                android:id="@+id/inc_btn"
                 style="@style/ScoreAddButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
