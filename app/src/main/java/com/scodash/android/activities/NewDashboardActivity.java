@@ -2,18 +2,18 @@ package com.scodash.android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.MotionEvent;
@@ -105,7 +105,7 @@ public class NewDashboardActivity extends AppCompatActivity {
             return noItemSnackbard;
         }
         noItemSnackbard = Snackbar.make(findViewById(R.id.new_items), R.string.no_empty_items, Snackbar.LENGTH_INDEFINITE);
-        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        int snackbarTextId = R.id.snackbar_text;
         View snackbarView = noItemSnackbard.getView();
         snackbarView.findViewById(snackbarTextId);
         TextView snackbarTextView = snackbarView.findViewById(snackbarTextId);
