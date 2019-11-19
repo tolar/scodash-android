@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.Item;
@@ -58,7 +59,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
             }
         });
 
-        LinearLayout commasView = itemLineView.findViewById(R.id.commas);
+        FlexboxLayout commasView = itemLineView.findViewById(R.id.commas);
         commasView.removeAllViews();
 
         int fives = item.getScore() / 5;
