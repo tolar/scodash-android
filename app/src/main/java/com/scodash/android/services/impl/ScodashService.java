@@ -8,6 +8,7 @@ import com.scodash.android.services.dto.DashboardId;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+@Singleton
 public class ScodashService {
 
     // TODO docasne jen jedna nastenka

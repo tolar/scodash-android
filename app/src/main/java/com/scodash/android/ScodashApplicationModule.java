@@ -3,6 +3,8 @@ package com.scodash.android;
 import com.scodash.android.activities.DashboardActivity;
 import com.scodash.android.activities.NewDashboardActivity;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
@@ -14,5 +16,7 @@ public abstract class ScodashApplicationModule {
 
     @ContributesAndroidInjector
     abstract DashboardActivity contributeDashboardActivityInjector();
+
+
 
 }

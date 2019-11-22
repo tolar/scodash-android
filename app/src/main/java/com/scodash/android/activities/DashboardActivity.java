@@ -1,11 +1,15 @@
 package com.scodash.android.activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 import com.scodash.android.R;
@@ -22,25 +26,32 @@ public class DashboardActivity extends AppCompatActivity {
     public static final String WRITE_HASH = "writeHash";
     public static final String READ_HASH = "readHash";
 
+    private Dashboard dashboard;
+
     @Inject
     ScodashService scodashService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         setupToolbar();
-        Dashboard dashboard = getDashboardFromIntent();
+        dashboard = getDashboardFromIntent();
 
         TextView nameView = findViewById(R.id.dashboard_name);
         nameView.setText(dashboard.getName());
 
         TextView descriptionView = findViewById(R.id.dashboard_description);
         descriptionView.setText(dashboard.getDescription());
+
+        RecyclerView itemsRecyler = findViewById(R.id.items);
+        itemsRecyler.setAdapter(new DashboardItemsAdapter(dashboard));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        itemsRecyler.setLayoutManager(layoutManager);
 
 
 }
@@ -66,5 +77,14 @@ public class DashboardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void incScore(View view) {
+        Log.d("x", "incItem");
+        //dashboard.
+    }
+
+    public void decScore(View view) {
+        Log.d("x", "decItem");
     }
 }

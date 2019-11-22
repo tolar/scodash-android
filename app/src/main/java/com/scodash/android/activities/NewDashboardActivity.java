@@ -47,10 +47,9 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_dashboard);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
