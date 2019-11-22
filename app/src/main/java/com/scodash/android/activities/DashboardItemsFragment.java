@@ -1,9 +1,9 @@
 package com.scodash.android.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,7 +17,7 @@ import com.scodash.android.R;
 
 public class DashboardItemsFragment extends Fragment {
 
-    private DashboardItemsAdapter itemsAdapter;
+    private NewDashboardItemsAdapter itemsAdapter;
 
     public DashboardItemsFragment() {
     }
@@ -37,8 +37,8 @@ public class DashboardItemsFragment extends Fragment {
     }
 
     private void attachItemsAdapter(View rootView) {
-        RecyclerView itemsRecyler = rootView.findViewById(R.id.items);
-        itemsAdapter = new DashboardItemsAdapter();
+        RecyclerView itemsRecyler = rootView.findViewById(R.id.new_items);
+        itemsAdapter = new NewDashboardItemsAdapter();
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

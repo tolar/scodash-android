@@ -5,7 +5,7 @@ import java.util.TreeSet;
 
 public class Dashboard {
 
-    private Set<String> items = new TreeSet<>();
+    private Set<Item> items = new TreeSet<>();
 
     private String name;
 
@@ -15,11 +15,11 @@ public class Dashboard {
 
     private String authorEmail;
 
-    public Set<String> getItems() {
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(Set<String> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 
@@ -59,11 +59,11 @@ public class Dashboard {
         items.clear();
     }
 
-    public void addItem(String item) {
-        items.add(item);
+    public void addItem(String name) {
+        items.add(new Item(name));
     }
 
-    public void removeItem(String item) {
-        items.remove(item);
+    public void removeItem(String name) {
+        items.remove(new Item(name));
     }
 }
