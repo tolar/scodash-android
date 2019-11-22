@@ -11,15 +11,25 @@ import android.widget.TextView;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.dto.DashboardId;
-import com.scodash.android.services.impl.ScodashServiceImpl;
+import com.scodash.android.services.impl.ScodashService;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 
 public class DashboardActivity extends AppCompatActivity {
 
     public static final String WRITE_HASH = "writeHash";
     public static final String READ_HASH = "readHash";
 
+    @Inject
+    ScodashService scodashService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        AndroidInjection.inject(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
@@ -39,7 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String writeHash = intent.getStringExtra(WRITE_HASH);
         String readHash = intent.getStringExtra(READ_HASH);
-        Dashboard dashboard = ScodashServiceImpl.getInstance().getDashboard(new DashboardId(writeHash, readHash));
+        Dashboard dashboard = scodashService.getDashboard(new DashboardId(writeHash, readHash));
         return dashboard;
     }
 

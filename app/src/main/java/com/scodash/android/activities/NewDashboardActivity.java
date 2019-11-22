@@ -25,13 +25,20 @@ import android.widget.TextView;
 
 import com.scodash.android.R;
 import com.scodash.android.services.dto.DashboardId;
-import com.scodash.android.services.impl.ScodashServiceImpl;
+import com.scodash.android.services.impl.ScodashService;
+
+import javax.inject.Inject;
+import dagger.android.AndroidInjection;
+
 
 public class NewDashboardActivity extends AppCompatActivity {
 
     public static final int NAME_TAB_POSITION = 0;
     public static final int ITEMS_TAB_POSITION = 1;
     public static final int AUTHOR_TAB_POSITION = 2;
+
+    @Inject
+    ScodashService scodashService;
 
     private ViewPager viewPager;
     private StepsPageAdapter stepsPageAdapter;
@@ -40,6 +47,9 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        AndroidInjection.inject(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_dashboard);
 
@@ -142,7 +152,7 @@ public class NewDashboardActivity extends AppCompatActivity {
             NewDashboard.getInstance().setAuthorName(name);
             NewDashboard.getInstance().setAuthorEmail(email);
 
-            DashboardId dashboardId = ScodashServiceImpl.getInstance().createDashboard(NewDashboard.getInstance());
+            DashboardId dashboardId = scodashService.createDashboard(NewDashboard.getInstance());
             Intent intent = new Intent(this, DashboardActivity.class);
             intent.putExtra(DashboardActivity.WRITE_HASH, dashboardId.getWriteHash());
             intent.putExtra(DashboardActivity.READ_HASH, dashboardId.getReadHash());

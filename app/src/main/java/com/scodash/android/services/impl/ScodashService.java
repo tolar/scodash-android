@@ -3,27 +3,20 @@ package com.scodash.android.services.impl;
 import android.util.Log;
 
 import com.scodash.android.dto.Dashboard;
-import com.scodash.android.services.ScodashService;
 import com.scodash.android.services.dto.DashboardId;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class ScodashServiceImpl implements ScodashService {
-
-    private static ScodashService scodashService;
+public class ScodashService {
 
     // TODO docasne jen jedna nastenka
     private Dashboard dashboard;
 
-    public static ScodashService getInstance() {
-        if (scodashService == null) {
-            scodashService = new ScodashServiceImpl();
-        }
-        return scodashService;
+    @Inject
+    public ScodashService() {
     }
 
-    @Override
     public DashboardId createDashboard(Dashboard newDashboard) {
         Log.d("ScodashService", "createDashboard");
         DashboardId dashboardId = new DashboardId("aaaaa", "bbbbb");
@@ -31,7 +24,6 @@ public class ScodashServiceImpl implements ScodashService {
         return dashboardId;
     }
 
-    @Override
     public Dashboard getDashboard(DashboardId dashboardId) {
         return dashboard;
     }
