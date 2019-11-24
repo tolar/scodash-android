@@ -1,32 +1,39 @@
 package com.scodash.android.activities;
 
 import android.content.Intent;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.dto.DashboardId;
 import com.scodash.android.services.impl.ScodashService;
 
+import java.text.DateFormat;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+
+import static android.graphics.Typeface.BOLD;
 
 public class DashboardActivity extends AppCompatActivity {
 
     public static final String WRITE_HASH = "writeHash";
     public static final String READ_HASH = "readHash";
 
-    private Dashboard dashboard;
 
     @Inject
     ScodashService scodashService;
@@ -39,7 +46,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         setupToolbar();
-        dashboard = getDashboardFromIntent();
+        Dashboard dashboard = getDashboardFromIntent();
 
         TextView nameView = findViewById(R.id.dashboard_name);
         nameView.setText(dashboard.getName());
@@ -53,8 +60,30 @@ public class DashboardActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);
 
+        TextView footerLine1View = findViewById(R.id.dashboard_footer_line1);
+        SpannableString footerLine1Str = prepareFooterLine1Text(dashboard);
+        footerLine1View.setText(footerLine1Str);
 
-}
+        TextView footerLine2View = findViewById(R.id.dashboard_footer_line2);
+        String footerLine2Str = prepareFooterLine2Text(dashboard);
+        footerLine2View.setText(footerLine2Str);
+
+    }
+
+    private SpannableString prepareFooterLine1Text(Dashboard dashboard) {
+        String firstPartText = "Dashboard ";
+        String dashboardName = dashboard.getName();
+        String secondPartText = " created by ";
+        String dashboardAuthor = dashboard.getAuthorName();
+        String thirdPart = " on " + DateFormat.getDateInstance().format(dashboard.getCreated());
+        SpannableString str = new SpannableString(firstPartText + dashboardName + secondPartText + dashboardAuthor + thirdPart);
+        str.setSpan(new StyleSpan(BOLD), firstPartText.length(), firstPartText.length() + dashboardName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return str;
+    }
+
+    private String prepareFooterLine2Text(Dashboard dashboard) {
+        return "Last update on " + DateFormat.getDateTimeInstance().format(dashboard.getUpdated());
+    }
 
     private Dashboard getDashboardFromIntent() {
         Intent intent = getIntent();

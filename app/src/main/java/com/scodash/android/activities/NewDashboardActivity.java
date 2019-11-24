@@ -2,18 +2,7 @@ package com.scodash.android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.MotionEvent;
@@ -23,11 +12,26 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import com.scodash.android.R;
 import com.scodash.android.services.dto.DashboardId;
 import com.scodash.android.services.impl.ScodashService;
 
+import java.util.Date;
+
 import javax.inject.Inject;
+
 import dagger.android.AndroidInjection;
 
 
@@ -150,6 +154,8 @@ public class NewDashboardActivity extends AppCompatActivity {
         if (validationOk) {
             NewDashboard.getInstance().setAuthorName(name);
             NewDashboard.getInstance().setAuthorEmail(email);
+            NewDashboard.getInstance().setCreated(new Date());
+            NewDashboard.getInstance().setUpdated(new Date());
 
             DashboardId dashboardId = scodashService.createDashboard(NewDashboard.getInstance());
             Intent intent = new Intent(this, DashboardActivity.class);
