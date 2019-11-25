@@ -20,4 +20,7 @@
     <string name="author_email_mandatory">Email required</string>
     <string name="not_valid_email">Not valid email</string>
 
+    <string name="sorting_az">A-Z</string>
+    <string name="sorting_score">Score</string>
+
 </resources>

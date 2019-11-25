@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Menu;
-import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -19,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.dto.DashboardId;
+import com.scodash.android.services.impl.DashboardService;
 import com.scodash.android.services.impl.ScodashService;
+import com.scodash.android.services.impl.Sorting;
 
 import java.text.DateFormat;
 
@@ -34,9 +35,12 @@ public class DashboardActivity extends AppCompatActivity {
     public static final String WRITE_HASH = "writeHash";
     public static final String READ_HASH = "readHash";
 
-
     @Inject
     ScodashService scodashService;
+
+    @Inject
+    DashboardService dashboardService;
+    private DashboardItemsAdapter itemsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,23 @@ public class DashboardActivity extends AppCompatActivity {
         TextView descriptionView = findViewById(R.id.dashboard_description);
         descriptionView.setText(dashboard.getDescription());
 
+        RadioGroup radioGroupView = findViewById(R.id.sort);
+        radioGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.sort_score) {
+                    itemsAdapter.setSorting(Sorting.SCORE);
+                } else {
+                    itemsAdapter.setSorting(Sorting.AZ);
+                }
+                itemsAdapter.notifyDataSetChanged();
+            }
+        });
+
+
         RecyclerView itemsRecyler = findViewById(R.id.items);
-        itemsRecyler.setAdapter(new DashboardItemsAdapter(dashboard));
+        itemsAdapter = new DashboardItemsAdapter(dashboardService);
+        itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);
@@ -90,6 +109,7 @@ public class DashboardActivity extends AppCompatActivity {
         String writeHash = intent.getStringExtra(WRITE_HASH);
         String readHash = intent.getStringExtra(READ_HASH);
         Dashboard dashboard = scodashService.getDashboard(new DashboardId(writeHash, readHash));
+        dashboardService.setCurrentDashboard(dashboard);
         return dashboard;
     }
 
@@ -108,12 +128,5 @@ public class DashboardActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void incScore(View view) {
-        Log.d("x", "incItem");
-        //dashboard.
-    }
 
-    public void decScore(View view) {
-        Log.d("x", "decItem");
-    }
 }

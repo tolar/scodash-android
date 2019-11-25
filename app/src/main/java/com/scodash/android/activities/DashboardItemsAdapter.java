@@ -1,8 +1,5 @@
 package com.scodash.android.activities;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +7,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.flexbox.FlexboxLayout;
 import com.scodash.android.R;
-import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.Item;
+import com.scodash.android.services.impl.DashboardService;
+import com.scodash.android.services.impl.Sorting;
 
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 
-    private Dashboard dashboard;
+    private DashboardService dashboardService;
 
-    public DashboardItemsAdapter(Dashboard dashboard) {
-        this.dashboard = dashboard;
+    private Sorting sorting = Sorting.AZ;
+
+    public DashboardItemsAdapter(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
     }
 
     @NonNull
@@ -31,11 +35,11 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int index) {
         LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
         // set item name
         TextView nameTextView = itemLineView.findViewById(R.id.item_name);
-        final Item item = (dashboard.getItems().toArray(new Item[0]))[i];
+        final Item item = dashboardService.getItem(index, sorting);
         nameTextView.setText(item.getName());
         // set item score
         TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
@@ -98,9 +102,16 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     @Override
     public int getItemCount() {
-        return dashboard.getItems().size();
+        return dashboardService.getItemCount();
     }
 
+    public Sorting getSorting() {
+        return sorting;
+    }
+
+    public void setSorting(Sorting sorting) {
+        this.sorting = sorting;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
