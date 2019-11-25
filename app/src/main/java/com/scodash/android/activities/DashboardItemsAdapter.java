@@ -49,7 +49,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
         itemLineView.findViewById(R.id.inc_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item.setScore(item.getScore()+1);
+                item.setScore(item.getScore() + 1);
                 notifyDataSetChanged();
             }
         });
