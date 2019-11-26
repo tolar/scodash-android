@@ -1,7 +1,11 @@
 package com.scodash.android.services.impl;
 
+import android.util.Log;
+
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.Item;
+import com.scodash.android.services.ServerWebsocketService;
+import com.tinder.scarlet.WebSocket;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +15,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.functions.Consumer;
+
 @Singleton
 public class DashboardService {
 
@@ -18,6 +24,11 @@ public class DashboardService {
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
+
+    @Inject
+    ServerWebsocketServiceProvider serverWebsocketServiceProvider;
+
+    private ServerWebsocketService serverWebsocketService;
 
     @Inject
     public DashboardService() {
@@ -59,6 +70,23 @@ public class DashboardService {
 
     public int getItemCount() {
         return currentDashboard.getItems().size();
+    }
+
+    public void connectToServer(String hash) {
+        Log.d(this.getClass().getSimpleName(), "Connecting to server with hash " + hash);
+        serverWebsocketService = serverWebsocketServiceProvider.getInstance(hash);
+        serverWebsocketService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
+            @Override
+            public void accept(Dashboard dashboard) throws Exception {
+                Log.d(this.getClass().getSimpleName(), "message received");
+            }
+        });
+        serverWebsocketService.observeWebsocketEvent().subscribe(new Consumer<WebSocket.Event>() {
+            @Override
+            public void accept(WebSocket.Event event) throws Exception {
+                Log.d(this.getClass().getSimpleName(), "message received");
+            }
+        });
     }
 
 

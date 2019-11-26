@@ -40,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Inject
     DashboardService dashboardService;
+
     private DashboardItemsAdapter itemsAdapter;
 
     @Override

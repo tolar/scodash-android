@@ -17,7 +17,6 @@ public class ScodashApplication extends Application implements HasAndroidInjecto
     public void onCreate() {
         super.onCreate();
         DaggerScodashApplicationComponent.create().inject(this);
-
     }
 
     @Override

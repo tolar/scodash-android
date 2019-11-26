@@ -10,6 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -18,6 +19,9 @@ android {
         }
     }
 }
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -32,4 +36,11 @@ dependencies {
     implementation 'com.google.dagger:dagger-android:2.25.2'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.25.2'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.25.2'
+    implementation 'com.tinder.scarlet:lifecycle-android:0.1.9'
+    implementation 'com.tinder.scarlet:message-adapter-jackson:0.1.9'
+    implementation 'com.tinder.scarlet:scarlet:0.1.9'
+    implementation 'com.tinder.scarlet:stream-adapter-rxjava2:0.1.9'
+    implementation 'com.tinder.scarlet:websocket-okhttp:0.1.9'
+    implementation 'com.tinder.scarlet:message-adapter-moshi:0.1.9'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

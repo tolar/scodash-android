@@ -29,5 +29,9 @@ public class ScodashService {
         return dashboard;
     }
 
+    public void connectToServer(DashboardId dashboardId) {
+
+    }
+
 
 }

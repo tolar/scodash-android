@@ -1,9 +1,12 @@
 package com.scodash.android.dto;
 
+import com.squareup.moshi.Json;
+
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+@Json(name = "dasboard")
 public class Dashboard {
 
     private Set<Item> items = new TreeSet<>();

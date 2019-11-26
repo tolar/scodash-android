@@ -7,6 +7,6 @@ import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
 
 @Singleton
-@Component(modules = { AndroidInjectionModule.class, ScodashApplicationModule.class})
+@Component(modules = { AndroidInjectionModule.class, ScodashApplicationModule.class, ServerCommunicationModule.class})
 public interface ScodashApplicationComponent extends AndroidInjector<ScodashApplication> {
 }
