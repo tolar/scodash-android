@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         RecyclerView itemsRecyler = findViewById(R.id.recents);
-        recentDashboardsAdapter = new RecentDashboardsAdapter(dashboardService);
+        recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), dashboardService);
         itemsRecyler.setAdapter(recentDashboardsAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);

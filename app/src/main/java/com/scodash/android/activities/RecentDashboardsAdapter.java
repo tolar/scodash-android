@@ -1,5 +1,6 @@
 package com.scodash.android.activities;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,33 +15,42 @@ import com.scodash.android.services.impl.DashboardService;
 
 class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> {
 
+    private Context context;
     private DashboardService dashboardService;
 
+    // TODO ulozit do lokalniho uloziste
     private String[] names = new String[] {"Test", "Today Scrabble Game"};
+    private String[] descriptions = new String[] {"popis", "dlouhy popis"};
+    private boolean[] writeModes = new boolean[] {false, true};
     private String[] hashes = new String[] {"bhnchWpU", "RH5lbxGr"};
 
-    public RecentDashboardsAdapter(DashboardService dashboardService) {
+    public RecentDashboardsAdapter(Context context, DashboardService dashboardService) {
+        this.context = context;
         this.dashboardService = dashboardService;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_dashboard_reference, parent, false);
+        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_dashboard_item, parent, false);
         return new RecentDashboardsAdapter.ViewHolder(cardView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
         CardView itemView = viewHolder.itemView;
-        TextView recentItem = itemView.findViewById(R.id.name);
-        recentItem.setText(names[index]);
+        TextView recentName = itemView.findViewById(R.id.name);
+        recentName.setText(names[index]);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dashboardService.connectToServer(hashes[index]);
             }
         });
+        TextView recentDescription = itemView.findViewById(R.id.description);
+        recentDescription.setText(descriptions[index]);
+        TextView recentMode = itemView.findViewById(R.id.mode);
+        recentMode.setText(writeModes[index] ? "" :  context.getString(R.string.view_only) );
     }
 
     @Override

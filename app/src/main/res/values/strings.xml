@@ -22,5 +22,7 @@
 
     <string name="sorting_az">A-Z</string>
     <string name="sorting_score">Score</string>
+    <string name="recent_dashboards">Recent dashboards</string>
+    <string name="view_only">(view-only)</string>
 
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorButton">#0077c0</color>
+    <color name="colorNavyBlue">#0077c0</color>
     <color name="colorGrayBackground">#EEEEEE</color>
     <color name="colorWhiteBackground">#FFFFFF</color>
     <color name="colorText">#000000</color>

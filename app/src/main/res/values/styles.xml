@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorGrayBackground</item>
-        <item name="colorButtonNormal">@color/colorButton</item>
-        <item name="colorAccent">@color/colorButton</item>
+        <item name="colorButtonNormal">@color/colorNavyBlue</item>
+        <item name="colorAccent">@color/colorNavyBlue</item>
         <item name="android:textColor">@color/colorText</item>
 
         <item name="windowActionBar">false</item>
