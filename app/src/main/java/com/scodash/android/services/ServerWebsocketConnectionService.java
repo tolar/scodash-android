@@ -8,7 +8,7 @@ import com.tinder.scarlet.ws.Send;
 
 import io.reactivex.Flowable;
 
-public interface ServerWebsocketService {
+public interface ServerWebsocketConnectionService {
 
     @Send
     void updateDashboard(DashboardUpdateDto dashboardUpdateDto);

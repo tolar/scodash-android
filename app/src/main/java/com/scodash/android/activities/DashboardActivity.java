@@ -17,9 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
-import com.scodash.android.services.dto.DashboardId;
-import com.scodash.android.services.impl.DashboardService;
-import com.scodash.android.services.impl.ScodashService;
+import com.scodash.android.services.impl.LocalDashboardService;
+import com.scodash.android.services.impl.RemoteDashboardService;
 import com.scodash.android.services.impl.Sorting;
 
 import java.text.DateFormat;
@@ -32,14 +31,14 @@ import static android.graphics.Typeface.BOLD;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    public static final String WRITE_HASH = "writeHash";
-    public static final String READ_HASH = "readHash";
+    // launching intent properties
+    public static final String HASH = "hash";
 
     @Inject
-    ScodashService scodashService;
+    RemoteDashboardService remoteDashboardService;
 
     @Inject
-    DashboardService dashboardService;
+    LocalDashboardService localDashboardService;
 
     private DashboardItemsAdapter itemsAdapter;
 
@@ -74,7 +73,7 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         RecyclerView itemsRecyler = findViewById(R.id.items);
-        itemsAdapter = new DashboardItemsAdapter(dashboardService);
+        itemsAdapter = new DashboardItemsAdapter(localDashboardService);
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -107,11 +106,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     private Dashboard getDashboardFromIntent() {
         Intent intent = getIntent();
-        String writeHash = intent.getStringExtra(WRITE_HASH);
-        String readHash = intent.getStringExtra(READ_HASH);
-        Dashboard dashboard = scodashService.getDashboard(new DashboardId(writeHash, readHash));
-        dashboardService.setCurrentDashboard(dashboard);
-        return dashboard;
+        String hash = intent.getStringExtra(DashboardActivity.HASH);
+        return localDashboardService.getDashboardByHash(hash);
     }
 
     private void setupToolbar() {
@@ -128,6 +124,5 @@ public class DashboardActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
 }

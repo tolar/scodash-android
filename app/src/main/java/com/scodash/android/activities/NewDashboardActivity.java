@@ -25,8 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.scodash.android.R;
-import com.scodash.android.services.dto.DashboardId;
-import com.scodash.android.services.impl.ScodashService;
+import com.scodash.android.services.impl.LocalDashboardService;
 
 import java.util.Date;
 
@@ -42,7 +41,7 @@ public class NewDashboardActivity extends AppCompatActivity {
     public static final int AUTHOR_TAB_POSITION = 2;
 
     @Inject
-    ScodashService scodashService;
+    LocalDashboardService localDashboardService;
 
     private ViewPager viewPager;
     private StepsPageAdapter stepsPageAdapter;
@@ -157,10 +156,8 @@ public class NewDashboardActivity extends AppCompatActivity {
             NewDashboard.getInstance().setCreated(new Date());
             NewDashboard.getInstance().setUpdated(new Date());
 
-            DashboardId dashboardId = scodashService.createDashboard(NewDashboard.getInstance());
+            localDashboardService.createDashboard(NewDashboard.getInstance());
             Intent intent = new Intent(this, DashboardActivity.class);
-            intent.putExtra(DashboardActivity.WRITE_HASH, dashboardId.getWriteHash());
-            intent.putExtra(DashboardActivity.READ_HASH, dashboardId.getReadHash());
             startActivity(intent);
         }
 

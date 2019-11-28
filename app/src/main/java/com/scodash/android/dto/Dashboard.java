@@ -23,6 +23,14 @@ public class Dashboard {
 
     private Date updated;
 
+    private String hash;
+
+    public boolean writeMode;
+
+    private String writeHash;
+
+    private String readHash;
+
     public Date getCreated() {
         return created;
     }
@@ -90,4 +98,38 @@ public class Dashboard {
     public void removeItem(String name) {
         items.remove(new Item(name));
     }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public boolean isWriteMode() {
+        return writeMode;
+    }
+
+    public void setWriteMode(boolean writeMode) {
+        this.writeMode = writeMode;
+    }
+
+    public String getWriteHash() {
+        return writeHash;
+    }
+
+    public void setWriteHash(String writeHash) {
+        this.writeHash = writeHash;
+    }
+
+    public String getReadHash() {
+        return readHash;
+    }
+
+    public void setReadHash(String readHash) {
+        this.readHash = readHash;
+    }
+
+
 }

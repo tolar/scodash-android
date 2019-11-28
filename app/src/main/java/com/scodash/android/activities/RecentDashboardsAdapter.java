@@ -1,6 +1,7 @@
 package com.scodash.android.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,22 +12,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
-import com.scodash.android.services.impl.DashboardService;
+import com.scodash.android.dto.Dashboard;
+import com.scodash.android.services.impl.LocalDashboardService;
 
 class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> {
 
     private Context context;
-    private DashboardService dashboardService;
+    private LocalDashboardService localDashboardService;
 
-    // TODO ulozit do lokalniho uloziste
-    private String[] names = new String[] {"Test", "Today Scrabble Game"};
-    private String[] descriptions = new String[] {"popis", "dlouhy popis"};
-    private boolean[] writeModes = new boolean[] {false, true};
-    private String[] hashes = new String[] {"bhnchWpU", "RH5lbxGr"};
-
-    public RecentDashboardsAdapter(Context context, DashboardService dashboardService) {
+    public RecentDashboardsAdapter(Context context, LocalDashboardService localDashboardService) {
         this.context = context;
-        this.dashboardService = dashboardService;
+        this.localDashboardService = localDashboardService;
     }
 
     @NonNull
@@ -38,19 +34,29 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
+
+        final Dashboard dashboard = localDashboardService.getLocalDashboards().get(index);
+
         CardView itemView = viewHolder.itemView;
         TextView recentName = itemView.findViewById(R.id.name);
-        recentName.setText(names[index]);
+        recentName.setText(dashboard.getName());
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dashboardService.connectToServer(hashes[index]);
+                localDashboardService.setCurrentDashboard(dashboard);
+                startDashboardActivity(dashboard.getHash());
             }
         });
         TextView recentDescription = itemView.findViewById(R.id.description);
-        recentDescription.setText(descriptions[index]);
+        recentDescription.setText(dashboard.getDescription());
         TextView recentMode = itemView.findViewById(R.id.mode);
-        recentMode.setText(writeModes[index] ? "" :  context.getString(R.string.view_only) );
+        recentMode.setText(dashboard.isWriteMode() ? "" :  context.getString(R.string.view_only) );
+    }
+
+    private void startDashboardActivity(String hash) {
+        Intent intent = new Intent(context, DashboardActivity.class);
+        intent.putExtra(DashboardActivity.HASH, hash);
+        context.startActivity(intent);
     }
 
     @Override

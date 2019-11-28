@@ -14,17 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.flexbox.FlexboxLayout;
 import com.scodash.android.R;
 import com.scodash.android.dto.Item;
-import com.scodash.android.services.impl.DashboardService;
+import com.scodash.android.services.impl.LocalDashboardService;
 import com.scodash.android.services.impl.Sorting;
 
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 
-    private DashboardService dashboardService;
+    private LocalDashboardService localDashboardService;
 
     private Sorting sorting = Sorting.AZ;
 
-    public DashboardItemsAdapter(DashboardService dashboardService) {
-        this.dashboardService = dashboardService;
+    public DashboardItemsAdapter(LocalDashboardService localDashboardService) {
+        this.localDashboardService = localDashboardService;
     }
 
     @NonNull
@@ -39,7 +39,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
         LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
         // set item name
         TextView nameTextView = itemLineView.findViewById(R.id.item_name);
-        final Item item = dashboardService.getItem(index, sorting);
+        final Item item = localDashboardService.getItem(index, sorting);
         nameTextView.setText(item.getName());
         // set item score
         TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
@@ -102,7 +102,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     @Override
     public int getItemCount() {
-        return dashboardService.getItemCount();
+        return localDashboardService.getItemCount();
     }
 
     public Sorting getSorting() {
