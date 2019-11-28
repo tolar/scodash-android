@@ -24,8 +24,6 @@ public class Dashboard {
 
     private String hash;
 
-    public boolean writeMode;
-
     private String writeHash;
 
     private String readonlyHash;
@@ -106,14 +104,6 @@ public class Dashboard {
 
     public void setHash(String hash) {
         this.hash = hash;
-    }
-
-    public boolean isWriteMode() {
-        return writeMode;
-    }
-
-    public void setWriteMode(boolean writeMode) {
-        this.writeMode = writeMode;
     }
 
     public String getWriteHash() {

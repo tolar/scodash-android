@@ -2,6 +2,7 @@ package com.scodash.android.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
         TextView recentDescription = itemView.findViewById(R.id.description);
         recentDescription.setText(dashboard.getDescription());
         TextView recentMode = itemView.findViewById(R.id.mode);
-        recentMode.setText(dashboard.isWriteMode() ? "" :  context.getString(R.string.view_only) );
+        recentMode.setText(!TextUtils.isEmpty(dashboard.getWriteHash()) ? "" :  context.getString(R.string.view_only) );
     }
 
     private void startDashboardActivity(String hash) {

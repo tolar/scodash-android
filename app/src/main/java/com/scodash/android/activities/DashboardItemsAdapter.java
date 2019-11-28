@@ -1,8 +1,10 @@
 package com.scodash.android.activities;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.scodash.android.R;
+import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.DashboardUpdateDto;
 import com.scodash.android.dto.Item;
 import com.scodash.android.services.impl.ScodashService;
@@ -48,24 +51,36 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
         TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
         scoreTextView.setText(String.valueOf(item.getScore()));
 
-        itemLineView.findViewById(R.id.inc_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                item.setScore(item.getScore() + 1);
-                notifyDataSetChanged();
-                scodashService.sendUpdateDataToServer(new DashboardUpdateDto("increment", item.getId(), scodashService.getCurrentDashboard().getHash(), new Date().getTimezoneOffset() ));
-            }
-        });
-        itemLineView.findViewById(R.id.dec_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (item.getScore() > 0) {
-                    item.setScore(item.getScore() - 1);
+        final Dashboard currentDashboard = scodashService.getCurrentDashboard();
+
+        if (!TextUtils.isEmpty(currentDashboard.getWriteHash())) {
+            View incBtnView = itemLineView.findViewById(R.id.inc_btn);
+            ((FrameLayout)incBtnView.getParent()).setVisibility(View.VISIBLE);
+            incBtnView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item.setScore(item.getScore() + 1);
                     notifyDataSetChanged();
-                    scodashService.sendUpdateDataToServer(new DashboardUpdateDto("decrement", item.getId(), scodashService.getCurrentDashboard().getHash(), new Date().getTimezoneOffset() ));
+                    scodashService.sendUpdateDataToServer(
+                            new DashboardUpdateDto(
+                                    "increment", item.getId(), currentDashboard.getWriteHash(), new Date().getTimezoneOffset()));
                 }
-            }
-        });
+            });
+            View decBtnView = itemLineView.findViewById(R.id.dec_btn);
+            ((FrameLayout)decBtnView.getParent()).setVisibility(View.VISIBLE);
+            decBtnView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item.getScore() > 0) {
+                        item.setScore(item.getScore() - 1);
+                        notifyDataSetChanged();
+                        scodashService.sendUpdateDataToServer(
+                                new DashboardUpdateDto(
+                                        "decrement", item.getId(), currentDashboard.getWriteHash(), new Date().getTimezoneOffset()));
+                    }
+                }
+            });
+        }
 
         FlexboxLayout commasView = itemLineView.findViewById(R.id.commas);
         commasView.removeAllViews();

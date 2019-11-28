@@ -45,8 +45,7 @@ public class ScodashService {
         final Dashboard d1 = new Dashboard();
         d1.setName("Text");
         d1.setDescription("popis");
-        d1.setHash("bhnchWpU");
-        d1.setWriteMode(false);
+        d1.setHash("oWwvZ2aT");
         d1.setCreated(new Date());
         d1.setUpdated(new Date());
         localDashboards.add(d1);
@@ -54,7 +53,6 @@ public class ScodashService {
         d2.setName("Today Scrabble Game");
         d2.setDescription("afternoon session");
         d2.setHash("RH5lbxGr");
-        d2.setWriteMode(true);
         d2.setCreated(new Date());
         d2.setUpdated(new Date());
         localDashboards.add(d2);
