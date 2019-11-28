@@ -5,7 +5,6 @@ import com.tinder.scarlet.Scarlet;
 import com.tinder.scarlet.messageadapter.jackson.JacksonMessageAdapter;
 import com.tinder.scarlet.streamadapter.rxjava2.RxJava2StreamAdapterFactory;
 import com.tinder.scarlet.websocket.okhttp.OkHttpClientUtils;
-import com.tinder.scarlet.websocket.okhttp.OkHttpWebSocket;
 import com.tinder.scarlet.websocket.okhttp.request.RequestFactory;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +14,9 @@ import okhttp3.Request;
 
 public class ServerWebsocketServiceProvider {
 
+    // TODO imp
     private static final String WS_URL = "ws://www.scodash.com/ws/";
+    private static final String ORIGIN_HEADER = "http://www.scodash.com";
 
     private OkHttpClient client;
 
@@ -52,7 +53,7 @@ public class ServerWebsocketServiceProvider {
             public Request createRequest() {
 
                 Request.Builder rb = new Request.Builder();
-                rb.url(WS_URL + hash).addHeader("Origin", "www.scodash.com").build();
+                rb.url(WS_URL + hash).addHeader("Origin", ORIGIN_HEADER).build();
 
                 return rb.build();
             }

@@ -17,7 +17,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     private DashboardService dashboardService;
 
     private String[] names = new String[] {"Test", "Today Scrabble Game"};
-    private String[] hashes = new String[] {"qMjiPQFo", "qMjiPQFo"};
+    private String[] hashes = new String[] {"bhnchWpU", "RH5lbxGr"};
 
     public RecentDashboardsAdapter(DashboardService dashboardService) {
         this.dashboardService = dashboardService;
