@@ -3,9 +3,16 @@ package com.scodash.android.dto;
 public class DashboardUpdateDto {
 
     private String operation;
-    private String itemId;
+    private int itemId;
     private String hash;
-    private String tzOffset;
+    private int tzOffset;
+
+    public DashboardUpdateDto(String operation, int itemId, String hash, int tzOffset) {
+        this.operation = operation;
+        this.itemId = itemId;
+        this.hash = hash;
+        this.tzOffset = tzOffset;
+    }
 
     public String getOperation() {
         return operation;
@@ -15,11 +22,11 @@ public class DashboardUpdateDto {
         this.operation = operation;
     }
 
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 
@@ -31,11 +38,11 @@ public class DashboardUpdateDto {
         this.hash = hash;
     }
 
-    public String getTzOffset() {
+    public int getTzOffset() {
         return tzOffset;
     }
 
-    public void setTzOffset(String tzOffset) {
+    public void setTzOffset(int tzOffset) {
         this.tzOffset = tzOffset;
     }
 }

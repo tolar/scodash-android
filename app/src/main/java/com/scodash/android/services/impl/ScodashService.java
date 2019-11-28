@@ -3,6 +3,7 @@ package com.scodash.android.services.impl;
 import android.util.Log;
 
 import com.scodash.android.dto.Dashboard;
+import com.scodash.android.dto.DashboardUpdateDto;
 import com.scodash.android.dto.Item;
 import com.scodash.android.services.ServerWebsocketConnectionService;
 import com.tinder.scarlet.WebSocket;
@@ -80,6 +81,10 @@ public class ScodashService {
         notifyListener();
     }
 
+    public void sendUpdateDataToServer(DashboardUpdateDto dashboardUpdate) {
+        serverWebsocketConnectionService.updateDashboard(dashboardUpdate);
+    }
+
     private void notifyListener() {
         for (int i = 0; i < currentDashboardChangeListeners.size(); i++) {
             CurrentDashboardChangeListener currentDashboardChangeListener = currentDashboardChangeListeners.get(i);
@@ -106,7 +111,7 @@ public class ScodashService {
         return localDashboards;
     }
 
-    public Item getItem(int index, Sorting sorting) {
+    public Item getCurrentItem(int index, Sorting sorting) {
         List itemsList = new ArrayList<>();
         itemsList.addAll(currentDashboard.getItems());
         if (sorting == Sorting.SCORE) {

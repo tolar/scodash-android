@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
+import com.scodash.android.services.impl.CurrentDashboardChangeListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 
@@ -28,7 +29,7 @@ import dagger.android.AndroidInjection;
 
 import static android.graphics.Typeface.BOLD;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements CurrentDashboardChangeListener {
 
     // launching intent properties
     public static final String HASH = "hash";
@@ -48,11 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
         setupToolbar();
         Dashboard dashboard = getDashboardFromIntent();
 
-        TextView nameView = findViewById(R.id.dashboard_name);
-        nameView.setText(dashboard.getName());
-
-        TextView descriptionView = findViewById(R.id.dashboard_description);
-        descriptionView.setText(dashboard.getDescription());
+        updateTextViews(dashboard);
 
         RadioGroup radioGroupView = findViewById(R.id.sort);
         radioGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -69,11 +66,23 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         RecyclerView itemsRecyler = findViewById(R.id.items);
-        itemsAdapter = new DashboardItemsAdapter(this, scodashService);
+        itemsAdapter = new DashboardItemsAdapter(scodashService);
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);
+
+        scodashService.addCurrentDashboardChangeListener(this);
+
+
+    }
+
+    private void updateTextViews(Dashboard dashboard) {
+        TextView nameView = findViewById(R.id.dashboard_name);
+        nameView.setText(dashboard.getName());
+
+        TextView descriptionView = findViewById(R.id.dashboard_description);
+        descriptionView.setText(dashboard.getDescription());
 
         TextView footerLine1View = findViewById(R.id.dashboard_footer_line1);
         SpannableString footerLine1Str = prepareFooterLine1Text(dashboard);
@@ -82,17 +91,18 @@ public class DashboardActivity extends AppCompatActivity {
         TextView footerLine2View = findViewById(R.id.dashboard_footer_line2);
         String footerLine2Str = prepareFooterLine2Text(dashboard);
         footerLine2View.setText(footerLine2Str);
-
     }
 
     private SpannableString prepareFooterLine1Text(Dashboard dashboard) {
         String firstPartText = "Dashboard ";
-        String dashboardName = dashboard.getName();
+        String dashboardName = dashboard.getName() == null ? "" : dashboard.getName();
         String secondPartText = " created by ";
-        String dashboardAuthor = dashboard.getOwnerName();
+        String dashboardAuthor = dashboard.getOwnerName() == null ? "" :  dashboard.getOwnerName();
         String thirdPart = " on " + DateFormat.getDateInstance().format(dashboard.getCreated());
-        SpannableString str = new SpannableString(firstPartText + dashboardName + secondPartText + dashboardAuthor + thirdPart);
+        String textBeforeOwnerName = firstPartText + dashboardName + secondPartText;
+        SpannableString str = new SpannableString(textBeforeOwnerName + dashboardAuthor + thirdPart);
         str.setSpan(new StyleSpan(BOLD), firstPartText.length(), firstPartText.length() + dashboardName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        str.setSpan(new StyleSpan(BOLD), textBeforeOwnerName.length(), textBeforeOwnerName.length() + dashboardAuthor.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
     }
 
@@ -121,4 +131,14 @@ public class DashboardActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void currentDashboardChanged(final Dashboard dashboard) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                itemsAdapter.notifyDataSetChanged();
+                updateTextViews(dashboard);
+            }
+        });
+    }
 }
