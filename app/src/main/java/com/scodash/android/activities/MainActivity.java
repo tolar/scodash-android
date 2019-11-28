@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
-import com.scodash.android.services.impl.LocalDashboardService;
+import com.scodash.android.services.impl.ScodashService;
 
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private RecentDashboardsAdapter recentDashboardsAdapter;
 
     @Inject
-    LocalDashboardService localDashboardService;
+    ScodashService scodashService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         RecyclerView itemsRecyler = findViewById(R.id.recents);
-        recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), localDashboardService);
+        recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), scodashService);
         itemsRecyler.setAdapter(recentDashboardsAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);

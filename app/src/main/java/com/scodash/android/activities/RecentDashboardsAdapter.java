@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
-import com.scodash.android.services.impl.LocalDashboardService;
+import com.scodash.android.services.impl.ScodashService;
 
 class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> {
 
     private Context context;
-    private LocalDashboardService localDashboardService;
+    private ScodashService scodashService;
 
-    public RecentDashboardsAdapter(Context context, LocalDashboardService localDashboardService) {
+    public RecentDashboardsAdapter(Context context, ScodashService scodashService) {
         this.context = context;
-        this.localDashboardService = localDashboardService;
+        this.scodashService = scodashService;
     }
 
     @NonNull
@@ -35,7 +35,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
 
-        final Dashboard dashboard = localDashboardService.getLocalDashboards().get(index);
+        final Dashboard dashboard = scodashService.getLocalDashboards().get(index);
 
         CardView itemView = viewHolder.itemView;
         TextView recentName = itemView.findViewById(R.id.name);
@@ -43,7 +43,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                localDashboardService.setCurrentDashboard(dashboard);
+                scodashService.setNewCurrentDashboard(dashboard);
                 startDashboardActivity(dashboard.getHash());
             }
         });

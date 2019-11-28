@@ -17,8 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
-import com.scodash.android.services.impl.LocalDashboardService;
-import com.scodash.android.services.impl.RemoteDashboardService;
+import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 
 import java.text.DateFormat;
@@ -35,10 +34,7 @@ public class DashboardActivity extends AppCompatActivity {
     public static final String HASH = "hash";
 
     @Inject
-    RemoteDashboardService remoteDashboardService;
-
-    @Inject
-    LocalDashboardService localDashboardService;
+    ScodashService scodashService;
 
     private DashboardItemsAdapter itemsAdapter;
 
@@ -73,7 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         RecyclerView itemsRecyler = findViewById(R.id.items);
-        itemsAdapter = new DashboardItemsAdapter(localDashboardService);
+        itemsAdapter = new DashboardItemsAdapter(this, scodashService);
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -93,7 +89,7 @@ public class DashboardActivity extends AppCompatActivity {
         String firstPartText = "Dashboard ";
         String dashboardName = dashboard.getName();
         String secondPartText = " created by ";
-        String dashboardAuthor = dashboard.getAuthorName();
+        String dashboardAuthor = dashboard.getOwnerName();
         String thirdPart = " on " + DateFormat.getDateInstance().format(dashboard.getCreated());
         SpannableString str = new SpannableString(firstPartText + dashboardName + secondPartText + dashboardAuthor + thirdPart);
         str.setSpan(new StyleSpan(BOLD), firstPartText.length(), firstPartText.length() + dashboardName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -107,7 +103,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Dashboard getDashboardFromIntent() {
         Intent intent = getIntent();
         String hash = intent.getStringExtra(DashboardActivity.HASH);
-        return localDashboardService.getDashboardByHash(hash);
+        return scodashService.getDashboardByHash(hash);
     }
 
     private void setupToolbar() {

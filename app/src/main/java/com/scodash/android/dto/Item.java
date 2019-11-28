@@ -4,12 +4,27 @@ import java.util.Objects;
 
 public class Item implements Comparable<Item> {
 
+    private int id;
     private String name;
     private int score;
 
     public Item(String name) {
         this.name = name;
         this.score = 0;
+    }
+
+    /**
+     * Default constructor due to JSON deserialization.
+     */
+    public Item() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

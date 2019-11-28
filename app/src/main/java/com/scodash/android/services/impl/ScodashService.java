@@ -1,7 +1,11 @@
 package com.scodash.android.services.impl;
 
+import android.util.Log;
+
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.Item;
+import com.scodash.android.services.ServerWebsocketConnectionService;
+import com.tinder.scarlet.WebSocket;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,21 +16,27 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.functions.Consumer;
+
 @Singleton
-public class LocalDashboardService {
+public class ScodashService {
 
     private Dashboard currentDashboard;
+
+    private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
 
     private List<Dashboard> localDashboards = new ArrayList<>();
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
 
-    @Inject
-    RemoteDashboardService remoteDashboardService;
+    private ServerWebsocketConnectionService serverWebsocketConnectionService;
 
     @Inject
-    public LocalDashboardService() {
+    ServerWebsocketServiceProvider serverWebsocketServiceProvider;
+
+    @Inject
+    public ScodashService() {
         initData();
     }
 
@@ -40,13 +50,17 @@ public class LocalDashboardService {
         d1.setUpdated(new Date());
         localDashboards.add(d1);
         final Dashboard d2 = new Dashboard();
-        d2.setName("dlouhy popis");
-        d2.setDescription("");
+        d2.setName("Today Scrabble Game");
+        d2.setDescription("afternoon session");
         d2.setHash("RH5lbxGr");
         d2.setWriteMode(true);
         d2.setCreated(new Date());
         d2.setUpdated(new Date());
         localDashboards.add(d2);
+    }
+
+    public void addCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
+        this.currentDashboardChangeListeners.add(changeListener);
     }
 
     public void createDashboard(Dashboard newDashboard) {
@@ -55,9 +69,22 @@ public class LocalDashboardService {
     }
 
 
-    public void setCurrentDashboard(Dashboard currentDashboard) {
+    public void setNewCurrentDashboard(Dashboard currentDashboard) {
         this.currentDashboard = currentDashboard;
-        remoteDashboardService.connectToServer(currentDashboard.getHash());
+        connectToServer(currentDashboard.getHash());
+        notifyListener();
+    }
+
+    public void updateCurrentDashboard(Dashboard dashboard) {
+        this.currentDashboard = dashboard;
+        notifyListener();
+    }
+
+    private void notifyListener() {
+        for (int i = 0; i < currentDashboardChangeListeners.size(); i++) {
+            CurrentDashboardChangeListener currentDashboardChangeListener = currentDashboardChangeListeners.get(i);
+            currentDashboardChangeListener.currentDashboardChanged(currentDashboard);
+        }
     }
 
     public Dashboard getCurrentDashboard() {
@@ -67,7 +94,7 @@ public class LocalDashboardService {
     public Dashboard getDashboardByHash(String hash) {
         for (int i = 0; i < localDashboards.size(); i++) {
             Dashboard dashboard = localDashboards.get(i);
-            if (hash.equals(dashboard.getReadHash()) || hash.equals(dashboard.getWriteHash()) || hash.equals(dashboard.getHash()) ) {
+            if (hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash()) || hash.equals(dashboard.getHash()) ) {
                 currentDashboard = dashboard;
                 return dashboard;
             }
@@ -105,11 +132,27 @@ public class LocalDashboardService {
 
     }
 
-    public int getItemCount() {
+    public int getCurrentDashboardItemCount() {
         return currentDashboard.getItems().size();
     }
 
 
+    private void connectToServer(String hash) {
+        Log.d(this.getClass().getSimpleName(), "Connecting to server with hash " + hash);
+        serverWebsocketConnectionService = serverWebsocketServiceProvider.getInstance(hash);
+        serverWebsocketConnectionService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
+            @Override
+            public void accept(Dashboard dashboard) {
+                updateCurrentDashboard(dashboard);
+            }
+        });
+        serverWebsocketConnectionService.observeWebsocketEvent().subscribe(new Consumer<WebSocket.Event>() {
+            @Override
+            public void accept(WebSocket.Event event) throws Exception {
+                Log.d(this.getClass().getSimpleName(), event.toString());
+            }
+        });
+    }
 
 
     class AzComparator implements Comparator<Item> {
@@ -142,4 +185,6 @@ public class LocalDashboardService {
 
         }
     }
+
+
 }

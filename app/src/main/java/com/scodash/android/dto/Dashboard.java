@@ -1,13 +1,12 @@
 package com.scodash.android.dto;
 
-import com.squareup.moshi.Json;
-
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-@Json(name = "dasboard")
 public class Dashboard {
+
+    private String id;
 
     private Set<Item> items = new TreeSet<>();
 
@@ -15,9 +14,9 @@ public class Dashboard {
 
     private String description;
 
-    private String authorName;
+    private String ownerName;
 
-    private String authorEmail;
+    private String ownerEmail;
 
     private Date created;
 
@@ -29,7 +28,9 @@ public class Dashboard {
 
     private String writeHash;
 
-    private String readHash;
+    private String readonlyHash;
+
+    public boolean deleted;
 
     public Date getCreated() {
         return created;
@@ -71,20 +72,20 @@ public class Dashboard {
         this.description = description;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
-    public String getAuthorEmail() {
-        return authorEmail;
+    public String getOwnerEmail() {
+        return ownerEmail;
     }
 
-    public void setAuthorEmail(String authorEmail) {
-        this.authorEmail = authorEmail;
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
     }
 
     public void reset() {
@@ -123,13 +124,19 @@ public class Dashboard {
         this.writeHash = writeHash;
     }
 
-    public String getReadHash() {
-        return readHash;
+    public String getReadonlyHash() {
+        return readonlyHash;
     }
 
-    public void setReadHash(String readHash) {
-        this.readHash = readHash;
+    public void setReadonlyHash(String readonlyHash) {
+        this.readonlyHash = readonlyHash;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }

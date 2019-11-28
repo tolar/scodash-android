@@ -1,5 +1,6 @@
 package com.scodash.android.activities;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.scodash.android.R;
+import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.Item;
-import com.scodash.android.services.impl.LocalDashboardService;
+import com.scodash.android.services.impl.CurrentDashboardChangeListener;
+import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 
-public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
+public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> implements CurrentDashboardChangeListener {
 
-    private LocalDashboardService localDashboardService;
+    private final Activity activity;
+    private final ScodashService scodashService;
 
     private Sorting sorting = Sorting.AZ;
 
-    public DashboardItemsAdapter(LocalDashboardService localDashboardService) {
-        this.localDashboardService = localDashboardService;
+    public DashboardItemsAdapter(Activity activity, ScodashService scodashService) {
+        this.scodashService = scodashService;
+        scodashService.addCurrentDashboardChangeListener(this);
+        this.activity = activity;
     }
 
     @NonNull
@@ -39,7 +45,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
         LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
         // set item name
         TextView nameTextView = itemLineView.findViewById(R.id.item_name);
-        final Item item = localDashboardService.getItem(index, sorting);
+        final Item item = scodashService.getItem(index, sorting);
         nameTextView.setText(item.getName());
         // set item score
         TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
@@ -102,7 +108,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     @Override
     public int getItemCount() {
-        return localDashboardService.getItemCount();
+        return scodashService.getCurrentDashboardItemCount();
     }
 
     public Sorting getSorting() {
@@ -111,6 +117,16 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     public void setSorting(Sorting sorting) {
         this.sorting = sorting;
+    }
+
+    @Override
+    public void currentDashboardChanged(Dashboard dashboard) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
