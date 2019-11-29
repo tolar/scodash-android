@@ -72,8 +72,8 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);
 
+        scodashService.setCurrentDashboard(dashboard);
         scodashService.addCurrentDashboardChangeListener(this);
-
 
     }
 
@@ -113,8 +113,7 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
     private Dashboard getDashboardFromIntent() {
         Intent intent = getIntent();
         String hash = intent.getStringExtra(DashboardActivity.HASH);
-        Dashboard dashboardByHash = scodashService.getDashboardByHash(hash);
-        scodashService.setCurrentDashboard(dashboardByHash);
+        Dashboard dashboardByHash = scodashService.getLocalDashboardByHash(hash);
         return dashboardByHash;
     }
 

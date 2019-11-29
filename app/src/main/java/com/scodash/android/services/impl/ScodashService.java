@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,7 +28,7 @@ public class ScodashService {
 
     private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
 
-    private List<Dashboard> localDashboards = new ArrayList<>();
+    private Map<String, Dashboard> localDashboards = new HashMap<>();
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
@@ -45,17 +47,19 @@ public class ScodashService {
         final Dashboard d1 = new Dashboard();
         d1.setName("Text");
         d1.setDescription("popis");
-        d1.setHash("oWwvZ2aT");
+        String hash1 = "oWwvZ2aT";
+        d1.setHash(hash1);
         d1.setCreated(new Date());
         d1.setUpdated(new Date());
-        localDashboards.add(d1);
+        localDashboards.put(hash1, d1);
         final Dashboard d2 = new Dashboard();
         d2.setName("Today Scrabble Game");
         d2.setDescription("afternoon session");
-        d2.setHash("RH5lbxGr");
+        String hash2 = "RH5lbxGr";
+        d2.setHash(hash2);
         d2.setCreated(new Date());
         d2.setUpdated(new Date());
-        localDashboards.add(d2);
+        localDashboards.put(hash2, d2);
     }
 
     public void addCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
@@ -63,7 +67,8 @@ public class ScodashService {
     }
 
     public void createDashboard(Dashboard newDashboard) {
-        localDashboards.add(newDashboard);
+        // TODO create dashbaord on server
+        localDashboards.put(newDashboard.getWriteHash(), newDashboard);
     }
 
     public void setCurrentDashboard(Dashboard dashboard) {
@@ -90,9 +95,10 @@ public class ScodashService {
         return currentDashboard;
     }
 
-    public Dashboard getDashboardByHash(String hash) {
-        for (int i = 0; i < localDashboards.size(); i++) {
-            Dashboard dashboard = localDashboards.get(i);
+    public Dashboard getLocalDashboardByHash(String hash) {
+        final List<Dashboard> dashboards = getLocalDashboards();
+        for (int i = 0; i < dashboards.size(); i++) {
+            Dashboard dashboard = dashboards.get(i);
             if (hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash()) || hash.equals(dashboard.getHash()) ) {
                 return dashboard;
             }
@@ -101,7 +107,7 @@ public class ScodashService {
     }
 
     public List<Dashboard> getLocalDashboards() {
-        return localDashboards;
+        return new ArrayList<>(localDashboards.values());
     }
 
     public Item getCurrentItem(int index, Sorting sorting) {
@@ -141,8 +147,16 @@ public class ScodashService {
         serverWebsocketConnectionService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
             @Override
             public void accept(Dashboard dashboard) {
+                // update appropriate local dashboard
+                Dashboard localDashboard = getLocalDashboardByHash(dashboard.getReadonlyHash());
+                if (localDashboard == null) {
+                    localDashboard = getLocalDashboardByHash(dashboard.getWriteHash());
+                }
+                dashboard.setHash(localDashboard.getHash());
+                localDashboards.put(localDashboard.getHash(), dashboard);
                 // check that message is for current dashboard
                 if (currentDashboard == null || isHashForDashboard(currentDashboard.getHash(), dashboard)) {
+                    // if so, we update also current dashboard
                     setCurrentDashboard(dashboard);
                 }
             }
