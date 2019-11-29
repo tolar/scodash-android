@@ -43,6 +43,7 @@ public class ScodashService {
         initData();
     }
 
+    // TODO implement local storage
     private void initData() {
         final Dashboard d1 = new Dashboard();
         d1.setName("Text");

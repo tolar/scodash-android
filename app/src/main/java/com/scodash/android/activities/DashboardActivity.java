@@ -1,6 +1,7 @@
 package com.scodash.android.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -48,6 +49,9 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
 
         setupToolbar();
         Dashboard dashboard = getDashboardFromIntent();
+        scodashService.setCurrentDashboard(dashboard);
+        scodashService.connectToDashboardOnServer(dashboard);
+
 
         updateTextViews(dashboard);
 
@@ -74,6 +78,7 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
 
         scodashService.setCurrentDashboard(dashboard);
         scodashService.addCurrentDashboardChangeListener(this);
+
 
     }
 
@@ -118,9 +123,20 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
 
     private Dashboard getDashboardFromIntent() {
         Intent intent = getIntent();
-        String hash = intent.getStringExtra(DashboardActivity.HASH);
-        Dashboard dashboardByHash = scodashService.getLocalDashboardByHash(hash);
-        return dashboardByHash;
+
+        Intent appLinkIntent = getIntent();
+        Uri appLinkData = appLinkIntent.getData();
+
+        String hash = null;
+        if (appLinkData != null && appLinkData.getPathSegments() != null && appLinkData.getPathSegments().size() >= 2) {
+            hash = appLinkData.getPathSegments().get(1);
+            Dashboard dashboardByHash = scodashService.getLocalDashboardByHash(hash);
+            return dashboardByHash;
+        } else {
+            hash = intent.getStringExtra(DashboardActivity.HASH);
+            Dashboard dashboardByHash = scodashService.getLocalDashboardByHash(hash);
+            return dashboardByHash;
+        }
     }
 
     private void setupToolbar() {

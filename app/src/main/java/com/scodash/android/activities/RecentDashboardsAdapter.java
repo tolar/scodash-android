@@ -44,15 +44,14 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scodashService.setCurrentDashboard(dashboard);
-                scodashService.connectToDashboardOnServer(dashboard);
                 startDashboardActivity(dashboard.getHash());
             }
         });
         TextView recentDescription = itemView.findViewById(R.id.description);
         recentDescription.setText(dashboard.getDescription());
         TextView recentMode = itemView.findViewById(R.id.mode);
-        recentMode.setText(!TextUtils.isEmpty(dashboard.getWriteHash()) ? "" :  context.getString(R.string.view_only) );
+        recentMode.setText(
+                (!TextUtils.isEmpty(dashboard.getWriteHash())) ? "" :  context.getString(R.string.view_only));
     }
 
     private void startDashboardActivity(String hash) {
