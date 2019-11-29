@@ -66,6 +66,10 @@ public class ScodashService {
         this.currentDashboardChangeListeners.add(changeListener);
     }
 
+    public void removeCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
+        this.currentDashboardChangeListeners.remove(changeListener);
+    }
+
     public void createDashboard(Dashboard newDashboard) {
         // TODO create dashbaord on server
         localDashboards.put(newDashboard.getWriteHash(), newDashboard);
@@ -148,9 +152,9 @@ public class ScodashService {
             @Override
             public void accept(Dashboard dashboard) {
                 // update appropriate local dashboard
-                Dashboard localDashboard = getLocalDashboardByHash(dashboard.getReadonlyHash());
+                Dashboard localDashboard = getLocalDashboardByHash(dashboard.getWriteHash());
                 if (localDashboard == null) {
-                    localDashboard = getLocalDashboardByHash(dashboard.getWriteHash());
+                    localDashboard = getLocalDashboardByHash(dashboard.getReadonlyHash());
                 }
                 dashboard.setHash(localDashboard.getHash());
                 localDashboards.put(localDashboard.getHash(), dashboard);

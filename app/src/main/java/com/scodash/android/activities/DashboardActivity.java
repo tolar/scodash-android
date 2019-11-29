@@ -77,6 +77,12 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
 
     }
 
+    @Override
+    protected void onDestroy() {
+        scodashService.removeCurrentDashboardChangeListener(this);
+        super.onDestroy();
+    }
+
     private void updateTextViews(Dashboard dashboard) {
         TextView nameView = findViewById(R.id.dashboard_name);
         nameView.setText(dashboard.getName());
