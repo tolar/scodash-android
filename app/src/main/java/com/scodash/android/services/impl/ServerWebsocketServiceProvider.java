@@ -9,6 +9,9 @@ import com.tinder.scarlet.websocket.okhttp.request.RequestFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -20,30 +23,20 @@ public class ServerWebsocketServiceProvider {
 
     private OkHttpClient client;
 
-    private String currentHash;
-    private ServerWebsocketConnectionService currentServerWebsocketConnectionService;
+    private Map<String, ServerWebsocketConnectionService> connections = new HashMap<>();
 
     public ServerWebsocketServiceProvider(OkHttpClient client) {
         this.client = client;
     }
 
     ServerWebsocketConnectionService getInstance(String hash) {
-        if (currentHash == null) {
-            setNewCurrentConnection(hash);
-        } else if (currentHash != hash) {
-            closeCurrentConnection();
-            setNewCurrentConnection(hash);
+        if (connections.containsKey(hash)) {
+            return connections.get(hash);
+        } else {
+            ServerWebsocketConnectionService newNerverWebsocketConnectionService = createServerWebsocketService(hash);
+            connections.put(hash, newNerverWebsocketConnectionService);
+            return newNerverWebsocketConnectionService;
         }
-        return currentServerWebsocketConnectionService;
-    }
-
-    private void closeCurrentConnection() {
-        // TODO naimplementovat
-    }
-
-    private void setNewCurrentConnection(String hash) {
-        currentHash = hash;
-        currentServerWebsocketConnectionService = createServerWebsocketService(hash);
     }
 
     private ServerWebsocketConnectionService createServerWebsocketService(final String hash) {

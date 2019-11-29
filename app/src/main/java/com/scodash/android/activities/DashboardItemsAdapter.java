@@ -55,7 +55,6 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
         if (!TextUtils.isEmpty(currentDashboard.getWriteHash())) {
             View incBtnView = itemLineView.findViewById(R.id.inc_btn);
-            ((FrameLayout)incBtnView.getParent()).setVisibility(View.VISIBLE);
             incBtnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,7 +66,6 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
                 }
             });
             View decBtnView = itemLineView.findViewById(R.id.dec_btn);
-            ((FrameLayout)decBtnView.getParent()).setVisibility(View.VISIBLE);
             decBtnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,6 +78,12 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
                     }
                 }
             });
+        } else {
+            // remove increment and decrement buttons completely
+            FrameLayout decContainerView = itemLineView.findViewById(R.id.dec_container);
+            decContainerView.removeAllViewsInLayout();
+            FrameLayout incContainerView = itemLineView.findViewById(R.id.inc_container);
+            incContainerView.removeAllViews();
         }
 
         FlexboxLayout commasView = itemLineView.findViewById(R.id.commas);

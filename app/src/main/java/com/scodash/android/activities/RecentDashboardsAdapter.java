@@ -44,7 +44,8 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scodashService.setNewCurrentDashboard(dashboard);
+                scodashService.setCurrentDashboard(dashboard);
+                scodashService.connectToDashboardOnServer(dashboard);
                 startDashboardActivity(dashboard.getHash());
             }
         });

@@ -64,19 +64,15 @@ public class ScodashService {
 
     public void createDashboard(Dashboard newDashboard) {
         localDashboards.add(newDashboard);
-        currentDashboard = newDashboard;
     }
 
-
-    public void setNewCurrentDashboard(Dashboard currentDashboard) {
-        this.currentDashboard = currentDashboard;
-        connectToServer(currentDashboard.getHash());
+    public void setCurrentDashboard(Dashboard dashboard) {
+        currentDashboard = dashboard;
         notifyListener();
     }
 
-    public void updateCurrentDashboard(Dashboard dashboard) {
-        this.currentDashboard = dashboard;
-        notifyListener();
+    public void connectToDashboardOnServer(Dashboard dashboard) {
+        connectToServer(dashboard.getHash());
     }
 
     public void sendUpdateDataToServer(DashboardUpdateDto dashboardUpdate) {
@@ -98,7 +94,6 @@ public class ScodashService {
         for (int i = 0; i < localDashboards.size(); i++) {
             Dashboard dashboard = localDashboards.get(i);
             if (hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash()) || hash.equals(dashboard.getHash()) ) {
-                currentDashboard = dashboard;
                 return dashboard;
             }
         }
@@ -146,7 +141,10 @@ public class ScodashService {
         serverWebsocketConnectionService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
             @Override
             public void accept(Dashboard dashboard) {
-                updateCurrentDashboard(dashboard);
+                // check that message is for current dashboard
+                if (currentDashboard == null || isHashForDashboard(currentDashboard.getHash(), dashboard)) {
+                    setCurrentDashboard(dashboard);
+                }
             }
         });
         serverWebsocketConnectionService.observeWebsocketEvent().subscribe(new Consumer<WebSocket.Event>() {
@@ -155,6 +153,16 @@ public class ScodashService {
                 Log.d(this.getClass().getSimpleName(), event.toString());
             }
         });
+    }
+
+    private boolean isHashForDashboard(String hash, Dashboard dashboard) {
+        if (hash == null || dashboard == null) {
+            return false;
+        }
+        if (hash.equals(dashboard.getHash()) || hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash())) {
+            return true;
+        }
+        return false;
     }
 
 

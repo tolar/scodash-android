@@ -113,7 +113,9 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
     private Dashboard getDashboardFromIntent() {
         Intent intent = getIntent();
         String hash = intent.getStringExtra(DashboardActivity.HASH);
-        return scodashService.getDashboardByHash(hash);
+        Dashboard dashboardByHash = scodashService.getDashboardByHash(hash);
+        scodashService.setCurrentDashboard(dashboardByHash);
+        return dashboardByHash;
     }
 
     private void setupToolbar() {
