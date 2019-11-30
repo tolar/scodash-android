@@ -45,9 +45,10 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         AndroidInjection.inject(this);
 
         setContentView(R.layout.activity_dashboard);
-
         setupToolbar();
-        Dashboard dashboard = getDashboardFromIntent();
+
+        final String hash = getHashFromIntent();
+        Dashboard dashboard = scodashService.getRemoteDashboardByHash(hash);
 
         if (dashboard == null) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -55,6 +56,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             return;
         }
 
+        scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboard);
         scodashService.setCurrentDashboard(dashboard);
         scodashService.connectToDashboardOnServer(dashboard);
 
@@ -127,7 +129,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         return "Last update on " + DateFormat.getDateTimeInstance().format(dashboard.getUpdated());
     }
 
-    private Dashboard getDashboardFromIntent() {
+    private String getHashFromIntent() {
         Intent intent = getIntent();
 
         Intent appLinkIntent = getIntent();
@@ -136,15 +138,10 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         String hash = null;
         if (appLinkData != null && appLinkData.getPathSegments() != null && appLinkData.getPathSegments().size() >= 2) {
             hash = appLinkData.getPathSegments().get(1);
-            Dashboard dashboardByHash = scodashService.getRemoteDashboardByHash(hash);
-            scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboardByHash);
-            return dashboardByHash;
         } else {
             hash = intent.getStringExtra(DashboardActivity.HASH);
-            Dashboard dashboardByHash = scodashService.getRemoteDashboardByHash(hash);
-            scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboardByHash);
-            return dashboardByHash;
         }
+        return hash;
     }
 
     private void setupToolbar() {
