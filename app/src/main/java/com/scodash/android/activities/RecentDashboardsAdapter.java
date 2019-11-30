@@ -18,12 +18,14 @@ import com.scodash.android.services.impl.ScodashService;
 
 class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> {
 
-    private Context context;
-    private ScodashService scodashService;
+    private final Context context;
+    private final ScodashService scodashService;
+    private final ScodashActivity scodashActivity;
 
-    public RecentDashboardsAdapter(Context context, ScodashService scodashService) {
+    public RecentDashboardsAdapter(Context context, ScodashService scodashService, ScodashActivity scodashActivity) {
         this.context = context;
         this.scodashService = scodashService;
+        this.scodashActivity = scodashActivity;
     }
 
     @NonNull
@@ -36,7 +38,8 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
 
-        final Dashboard dashboard = scodashService.getLocalDashboards().get(index);
+        final String hash = scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).get(index);
+        final Dashboard dashboard = scodashService.getRemoteDashboardByHash(hash);
 
         CardView itemView = viewHolder.itemView;
         TextView recentName = itemView.findViewById(R.id.name);
@@ -62,7 +65,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
 
     @Override
     public int getItemCount() {
-        return 2;
+        return scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

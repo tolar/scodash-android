@@ -25,4 +25,6 @@
     <string name="recent_dashboards">Recent dashboards</string>
     <string name="view_only">(view-only)</string>
 
+    <string name="preference_file_key">com.scodash.android.PREFERENCE_FILE_KEY</string>
+
 </resources>

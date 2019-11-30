@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ScodashActivity {
 
     private RecentDashboardsAdapter recentDashboardsAdapter;
 
@@ -36,15 +36,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView itemsRecyler = findViewById(R.id.recents);
-        recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), scodashService);
-        itemsRecyler.setAdapter(recentDashboardsAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        itemsRecyler.setLayoutManager(layoutManager);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setLogo(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
+
+        if (scodashService.getHashesFromLocalStorage(getScodashSharedPreferences()).size() > 0) {
+
+            RecyclerView itemsRecyler = findViewById(R.id.recents);
+            recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), scodashService, this);
+            itemsRecyler.setAdapter(recentDashboardsAdapter);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            itemsRecyler.setLayoutManager(layoutManager);
+        } else {
+            ViewGroup recents_container = findViewById(R.id.recents_container);
+            recents_container.removeAllViews();
+        }
     }
 
     @Override

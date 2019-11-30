@@ -1,5 +1,6 @@
 package com.scodash.android.services.impl;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.scodash.android.dto.Dashboard;
@@ -13,8 +14,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,11 +27,13 @@ import io.reactivex.functions.Consumer;
 @Singleton
 public class ScodashService {
 
+    /** Key to shared preferences for list hashes */
+    private static final String HASHES = "HASHES";
     private Dashboard currentDashboard;
 
     private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
 
-    private Map<String, Dashboard> localDashboards = new HashMap<>();
+    private Map<String, Dashboard> remoteDashboards = new HashMap<>();
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
@@ -50,17 +55,19 @@ public class ScodashService {
         d1.setDescription("popis");
         String hash1 = "oWwvZ2aT";
         d1.setHash(hash1);
+        d1.setReadonlyHash(hash1);
         d1.setCreated(new Date());
         d1.setUpdated(new Date());
-        localDashboards.put(hash1, d1);
+        remoteDashboards.put(hash1, d1);
         final Dashboard d2 = new Dashboard();
         d2.setName("Today Scrabble Game");
         d2.setDescription("afternoon session");
         String hash2 = "RH5lbxGr";
         d2.setHash(hash2);
+        d2.setWriteHash(hash2);
         d2.setCreated(new Date());
         d2.setUpdated(new Date());
-        localDashboards.put(hash2, d2);
+        remoteDashboards.put(hash2, d2);
     }
 
     public void addCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
@@ -73,7 +80,7 @@ public class ScodashService {
 
     public void createDashboard(Dashboard newDashboard) {
         // TODO create dashbaord on server
-        localDashboards.put(newDashboard.getWriteHash(), newDashboard);
+        remoteDashboards.put(newDashboard.getWriteHash(), newDashboard);
     }
 
     public void setCurrentDashboard(Dashboard dashboard) {
@@ -100,8 +107,8 @@ public class ScodashService {
         return currentDashboard;
     }
 
-    public Dashboard getLocalDashboardByHash(String hash) {
-        final List<Dashboard> dashboards = getLocalDashboards();
+    public Dashboard getRemoteDashboardByHash(String hash) {
+        final List<Dashboard> dashboards = getRemoteDashboards();
         for (int i = 0; i < dashboards.size(); i++) {
             Dashboard dashboard = dashboards.get(i);
             if (hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash()) || hash.equals(dashboard.getHash()) ) {
@@ -111,8 +118,8 @@ public class ScodashService {
         return null;
     }
 
-    public List<Dashboard> getLocalDashboards() {
-        return new ArrayList<>(localDashboards.values());
+    private List<Dashboard> getRemoteDashboards() {
+        return new ArrayList<>(remoteDashboards.values());
     }
 
     public Item getCurrentItem(int index, Sorting sorting) {
@@ -146,19 +153,14 @@ public class ScodashService {
     }
 
 
+
+
     private void connectToServer(String hash) {
         Log.d(this.getClass().getSimpleName(), "Connecting to server with hash " + hash);
         serverWebsocketConnectionService = serverWebsocketServiceProvider.getInstance(hash);
         serverWebsocketConnectionService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
             @Override
             public void accept(Dashboard dashboard) {
-                // update appropriate local dashboard
-                Dashboard localDashboard = getLocalDashboardByHash(dashboard.getWriteHash());
-                if (localDashboard == null) {
-                    localDashboard = getLocalDashboardByHash(dashboard.getReadonlyHash());
-                }
-                dashboard.setHash(localDashboard.getHash());
-                localDashboards.put(localDashboard.getHash(), dashboard);
                 // check that message is for current dashboard
                 if (currentDashboard == null || isHashForDashboard(currentDashboard.getHash(), dashboard)) {
                     // if so, we update also current dashboard
@@ -182,6 +184,26 @@ public class ScodashService {
             return true;
         }
         return false;
+    }
+
+    public void putHashToLocalStorage(SharedPreferences sharedPreferences, Dashboard dashboardByHash) {
+        String hash = dashboardByHash.getWriteHash();
+        if (hash == null) {
+            hash = dashboardByHash.getReadonlyHash();
+        }
+        Set<String> hashes = sharedPreferences.getStringSet(HASHES, new HashSet<String>());
+        hashes.add(hash);
+        sharedPreferences.edit().putStringSet(HASHES, hashes).commit();
+    }
+
+    public List<String> getHashesFromLocalStorage(SharedPreferences sharedPreferences) {
+        List<String> list = new ArrayList<>(sharedPreferences.getStringSet(HASHES, new HashSet<String>()));
+        Collections.sort(list);
+        return list;
+    }
+
+    public boolean hasWriteModeInLocalStorage(SharedPreferences sharedPreferences, String hash) {
+        return getHashesFromLocalStorage(sharedPreferences).contains(hash);
     }
 
 

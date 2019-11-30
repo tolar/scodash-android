@@ -11,7 +11,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +29,7 @@ import dagger.android.AndroidInjection;
 
 import static android.graphics.Typeface.BOLD;
 
-public class DashboardActivity extends AppCompatActivity implements CurrentDashboardChangeListener {
+public class DashboardActivity extends ScodashActivity implements CurrentDashboardChangeListener {
 
     // launching intent properties
     public static final String HASH = "hash";
@@ -49,6 +48,13 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
 
         setupToolbar();
         Dashboard dashboard = getDashboardFromIntent();
+
+        if (dashboard == null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         scodashService.setCurrentDashboard(dashboard);
         scodashService.connectToDashboardOnServer(dashboard);
 
@@ -130,11 +136,13 @@ public class DashboardActivity extends AppCompatActivity implements CurrentDashb
         String hash = null;
         if (appLinkData != null && appLinkData.getPathSegments() != null && appLinkData.getPathSegments().size() >= 2) {
             hash = appLinkData.getPathSegments().get(1);
-            Dashboard dashboardByHash = scodashService.getLocalDashboardByHash(hash);
+            Dashboard dashboardByHash = scodashService.getRemoteDashboardByHash(hash);
+            scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboardByHash);
             return dashboardByHash;
         } else {
             hash = intent.getStringExtra(DashboardActivity.HASH);
-            Dashboard dashboardByHash = scodashService.getLocalDashboardByHash(hash);
+            Dashboard dashboardByHash = scodashService.getRemoteDashboardByHash(hash);
+            scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboardByHash);
             return dashboardByHash;
         }
     }
