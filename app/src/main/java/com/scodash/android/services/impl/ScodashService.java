@@ -191,9 +191,11 @@ public class ScodashService {
         if (hash == null) {
             hash = dashboardByHash.getReadonlyHash();
         }
+        Set<String> newHashes = new HashSet<>();
+        newHashes.add(hash);
         Set<String> hashes = sharedPreferences.getStringSet(HASHES, new HashSet<String>());
-        hashes.add(hash);
-        sharedPreferences.edit().putStringSet(HASHES, hashes).commit();
+        newHashes.addAll(hashes);
+        sharedPreferences.edit().putStringSet(HASHES, newHashes).commit();
     }
 
     public List<String> getHashesFromLocalStorage(SharedPreferences sharedPreferences) {
