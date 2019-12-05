@@ -198,6 +198,14 @@ public class ScodashService {
         sharedPreferences.edit().putStringSet(HASHES, newHashes).commit();
     }
 
+    public void removeHashFromLocaStorage(SharedPreferences sharedPreferences, String hash) {
+        Set<String> newHashes = new HashSet<>();
+        Set<String> hashes = sharedPreferences.getStringSet(HASHES, new HashSet<String>());
+        newHashes.addAll(hashes);
+        newHashes.remove(hash);
+        sharedPreferences.edit().putStringSet(HASHES, newHashes).commit();
+    }
+
     public List<String> getHashesFromLocalStorage(SharedPreferences sharedPreferences) {
         List<String> list = new ArrayList<>(sharedPreferences.getStringSet(HASHES, new HashSet<String>()));
         Collections.sort(list);

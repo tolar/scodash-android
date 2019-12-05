@@ -78,4 +78,8 @@ public class MainActivity extends ScodashActivity {
         Intent intent = new Intent(this, NewDashboardActivity.class);
         startActivity(intent);
     }
+
+    public void removeRecentDashboard() {
+
+    }
 }

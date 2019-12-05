@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,15 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
         TextView recentMode = itemView.findViewById(R.id.mode);
         recentMode.setText(
                 (!TextUtils.isEmpty(dashboard.getWriteHash())) ? "" :  context.getString(R.string.view_only));
+
+        ImageButton removeBtn = itemView.findViewById(R.id.remove_btn);
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     private void startDashboardActivity(String hash) {

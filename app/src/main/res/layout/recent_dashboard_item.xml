@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:id="http://schemas.android.com/tools"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     android:layout_marginTop="5dp"
@@ -12,49 +13,63 @@
 
 
     <LinearLayout
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:orientation="horizontal"
+        >
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_weight="9"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:text="Name"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_width="wrap_content"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/mode"
+                    android:text="(readonly)"
+                    android:layout_marginStart="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorNavyBlue"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/description"
+                android:text="description"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
-                android:textSize="18sp"
-                />
+                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/mode"
-                android:layout_marginStart="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_width="wrap_content"
-                android:textColor="@color/colorNavyBlue"
-                android:textSize="14sp"
-                />
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_width="wrap_content"
-            android:textSize="14sp"
+        <ImageButton
+            android:id="@+id/remove_btn"
+            style="@style/RemoveButton"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
             />
-
 
     </LinearLayout>
 
