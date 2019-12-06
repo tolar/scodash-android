@@ -5,14 +5,14 @@
         <item name="colorPrimary">@color/colorGrayBackground</item>
         <item name="colorButtonNormal">@color/colorNavyBlue</item>
         <item name="colorAccent">@color/colorNavyBlue</item>
-        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColor">@color/colorPureBlack</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="BackButton" parent="@style/Widget.AppCompat.ImageButton">
-        <item name="android:textColor">@color/colorTextButton</item>
+        <item name="android:textColor">@color/colorPureWhite</item>
         <item name="android:src">@drawable/outline_keyboard_arrow_left_black_36</item>
         <item name="android:background">@drawable/imageview_shadow_border</item>
         <item name="android:layout_height">wrap_content</item>
@@ -37,7 +37,7 @@
     </style>
 
     <style name="NextButton" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/colorTextButton</item>
+        <item name="android:textColor">@color/colorPureWhite</item>
         <item name="android:drawableEnd">@drawable/outline_keyboard_arrow_right_white_36</item>
         <item name="android:text">@string/next_step</item>
         <item name="android:layout_height">wrap_content</item>

@@ -3,14 +3,14 @@
     <color name="colorNavyBlue">#0077c0</color>
     <color name="colorGrayBackground">#EEEEEE</color>
     <color name="colorWhiteBackground">#FFFFFF</color>
-    <color name="colorText">#000000</color>
-    <color name="colorTextButton">#FFFFFF</color>
+    <color name="colorPureBlack">#000000</color>
+    <color name="colorPureWhite">#FFFFFF</color>
 
     <color name="colorErrorText">#E53935</color>
     <color name="colorErrorBackground">#FFEBEE</color>
 
-    <color name="removeButtonColor">#e4004b</color>
-    <color name="addButtonColor">#74af28</color>
-    <color name="scoreButtonColor">#474747</color>
+    <color name="redRemoveColor">#e4004b</color>
+    <color name="greenAddColor">#74af28</color>
+    <color name="blackScoreColor">#474747</color>
 
 </resources>

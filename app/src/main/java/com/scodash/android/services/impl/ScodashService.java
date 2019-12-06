@@ -186,11 +186,19 @@ public class ScodashService {
         return false;
     }
 
+    public void putHashToLocalStorage(SharedPreferences sharedPreferences, String hash) {
+        addHashToLocalStorage(sharedPreferences, hash);
+    }
+
     public void putHashToLocalStorage(SharedPreferences sharedPreferences, Dashboard dashboardByHash) {
         String hash = dashboardByHash.getWriteHash();
         if (hash == null) {
             hash = dashboardByHash.getReadonlyHash();
         }
+        addHashToLocalStorage(sharedPreferences, hash);
+    }
+
+    private void addHashToLocalStorage(SharedPreferences sharedPreferences, String hash) {
         Set<String> newHashes = new HashSet<>();
         newHashes.add(hash);
         Set<String> hashes = sharedPreferences.getStringSet(HASHES, new HashSet<String>());

@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.impl.ScodashService;
@@ -63,6 +65,19 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
             public void onClick(View v) {
                 scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
                 notifyDataSetChanged();
+
+                Snackbar snackbar = Snackbar.make(scodashActivity.findViewById(R.id.coordinator), R.string.recent_dashboard_removed, Snackbar.LENGTH_LONG);
+                snackbar.getView().setBackgroundColor(ContextCompat.getColor(scodashActivity, R.color.greenAddColor));
+                snackbar.setActionTextColor(ContextCompat.getColor(scodashActivity, R.color.colorPureWhite));
+                snackbar.setTextColor(ContextCompat.getColor(scodashActivity, R.color.colorPureWhite));
+                snackbar.setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scodashService.putHashToLocalStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                        notifyDataSetChanged();
+                    }
+                });
+                snackbar.show();
             }
         });
     }

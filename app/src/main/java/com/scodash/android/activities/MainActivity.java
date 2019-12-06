@@ -79,7 +79,5 @@ public class MainActivity extends ScodashActivity {
         startActivity(intent);
     }
 
-    public void removeRecentDashboard() {
 
-    }
 }

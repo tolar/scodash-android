@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/addButtonColor"/>
+            <solid android:color="@color/greenAddColor"/>
             <size android:width="26dp" android:height="26dp"/>
         </shape>
     </item>
