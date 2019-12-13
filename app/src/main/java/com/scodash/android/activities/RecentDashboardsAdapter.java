@@ -19,6 +19,10 @@ import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.impl.ScodashService;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> {
 
     private final Context context;
@@ -42,15 +46,34 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
 
         final String hash = scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).get(index);
-        final Dashboard dashboard = scodashService.getRemoteDashboardByHash(hash);
+        final Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
+        call.enqueue(new Callback<Dashboard>() {
+            @Override
+            public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
+                if (response.isSuccessful()) {
+                    handleDashboardFromServer(viewHolder, hash, response.body());
+                } else {
+                    scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Dashboard> call, Throwable t) {
+                call.cancel();
+            }
+        });
+
+
+    }
+
+    private void handleDashboardFromServer(@NonNull ViewHolder viewHolder, String hash, Dashboard dashboard) {
         CardView itemView = viewHolder.itemView;
         TextView recentName = itemView.findViewById(R.id.name);
         recentName.setText(dashboard.getName());
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDashboardActivity(dashboard.getHash());
+                startDashboardActivity(hash);
             }
         });
         TextView recentDescription = itemView.findViewById(R.id.description);

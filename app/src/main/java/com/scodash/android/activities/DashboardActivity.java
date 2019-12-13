@@ -26,6 +26,9 @@ import java.text.DateFormat;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.graphics.Typeface.BOLD;
 
@@ -48,17 +51,36 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         setupToolbar();
 
         final String hash = getHashFromIntent();
-        Dashboard dashboard = scodashService.getRemoteDashboardByHash(hash);
+        Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
+        call.enqueue(new Callback<Dashboard>() {
+            @Override
+            public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
+                if (response.isSuccessful()) {
+                    handleDashboardFromServer(response.body());
+                } else {
+                    redirectToMainActivity();
+                }
+            }
 
-        if (dashboard == null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            return;
-        }
+            @Override
+            public void onFailure(Call<Dashboard> call, Throwable t) {
+                call.cancel();
+                redirectToMainActivity();
+            }
+        });
+    }
 
-        scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboard);
+    private void redirectToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void handleDashboardFromServer(Dashboard dashboard) {
+
+        scodashService.populateAccessHash(dashboard);
+        scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboard.getHash());
         scodashService.setCurrentDashboard(dashboard);
-        scodashService.connectToDashboardOnServer(dashboard);
+        scodashService.connectToDashboardOnServer(dashboard.getHash());
 
 
         updateTextViews(dashboard);
@@ -84,10 +106,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);
 
-        scodashService.setCurrentDashboard(dashboard);
         scodashService.addCurrentDashboardChangeListener(this);
-
-
     }
 
     @Override
@@ -135,7 +154,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         Intent appLinkIntent = getIntent();
         Uri appLinkData = appLinkIntent.getData();
 
-        String hash = null;
+        String hash;
         if (appLinkData != null && appLinkData.getPathSegments() != null && appLinkData.getPathSegments().size() >= 2) {
             hash = appLinkData.getPathSegments().get(1);
         } else {

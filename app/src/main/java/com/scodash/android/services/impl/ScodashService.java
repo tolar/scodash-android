@@ -6,6 +6,7 @@ import android.util.Log;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.DashboardUpdateDto;
 import com.scodash.android.dto.Item;
+import com.scodash.android.services.ServerRestService;
 import com.scodash.android.services.ServerWebsocketConnectionService;
 import com.tinder.scarlet.WebSocket;
 
@@ -23,12 +24,20 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.functions.Consumer;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import static com.scodash.android.services.ServerRestService.BASE_URL;
 
 @Singleton
 public class ScodashService {
 
-    /** Key to shared preferences for list hashes */
+    /**
+     * Key to shared preferences for list hashes
+     */
     private static final String HASHES = "HASHES";
+    public static final String HOSTNAME = "www.scodash.com";
     private Dashboard currentDashboard;
 
     private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
@@ -40,34 +49,22 @@ public class ScodashService {
 
     private ServerWebsocketConnectionService serverWebsocketConnectionService;
 
+    private ServerRestService serverRestService;
+
     @Inject
     ServerWebsocketServiceProvider serverWebsocketServiceProvider;
 
     @Inject
     public ScodashService() {
-        initData();
+        initServerRestService();
     }
 
-    // TODO implement local storage
-    private void initData() {
-        final Dashboard d1 = new Dashboard();
-        d1.setName("Text");
-        d1.setDescription("popis");
-        String hash1 = "oWwvZ2aT";
-        d1.setHash(hash1);
-        d1.setReadonlyHash(hash1);
-        d1.setCreated(new Date());
-        d1.setUpdated(new Date());
-        remoteDashboards.put(hash1, d1);
-        final Dashboard d2 = new Dashboard();
-        d2.setName("Today Scrabble Game");
-        d2.setDescription("afternoon session");
-        String hash2 = "RH5lbxGr";
-        d2.setHash(hash2);
-        d2.setWriteHash(hash2);
-        d2.setCreated(new Date());
-        d2.setUpdated(new Date());
-        remoteDashboards.put(hash2, d2);
+    private void initServerRestService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+        serverRestService = retrofit.create(ServerRestService.class);
     }
 
     public void addCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
@@ -88,8 +85,8 @@ public class ScodashService {
         notifyListener();
     }
 
-    public void connectToDashboardOnServer(Dashboard dashboard) {
-        connectToServer(dashboard.getHash());
+    public void connectToDashboardOnServer(String hash) {
+        connectToServer(hash);
     }
 
     public void sendUpdateDataToServer(DashboardUpdateDto dashboardUpdate) {
@@ -107,15 +104,8 @@ public class ScodashService {
         return currentDashboard;
     }
 
-    public Dashboard getRemoteDashboardByHash(String hash) {
-        final List<Dashboard> dashboards = getRemoteDashboards();
-        for (int i = 0; i < dashboards.size(); i++) {
-            Dashboard dashboard = dashboards.get(i);
-            if (hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash()) || hash.equals(dashboard.getHash()) ) {
-                return dashboard;
-            }
-        }
-        return null;
+    public Call<Dashboard> getRemoteDashboardByHash(String hash) {
+        return serverRestService.getRemoteDashboardByHash(hash);
     }
 
     private List<Dashboard> getRemoteDashboards() {
@@ -153,8 +143,6 @@ public class ScodashService {
     }
 
 
-
-
     private void connectToServer(String hash) {
         Log.d(this.getClass().getSimpleName(), "Connecting to server with hash " + hash);
         serverWebsocketConnectionService = serverWebsocketServiceProvider.getInstance(hash);
@@ -164,6 +152,7 @@ public class ScodashService {
                 // check that message is for current dashboard
                 if (currentDashboard == null || isHashForDashboard(currentDashboard.getHash(), dashboard)) {
                     // if so, we update also current dashboard
+                    populateAccessHash(dashboard);
                     setCurrentDashboard(dashboard);
                 }
             }
@@ -186,16 +175,18 @@ public class ScodashService {
         return false;
     }
 
+
+
     public void putHashToLocalStorage(SharedPreferences sharedPreferences, String hash) {
         addHashToLocalStorage(sharedPreferences, hash);
     }
 
-    public void putHashToLocalStorage(SharedPreferences sharedPreferences, Dashboard dashboardByHash) {
+    public void populateAccessHash(Dashboard dashboardByHash) {
         String hash = dashboardByHash.getWriteHash();
-        if (hash == null) {
+        if (hash == null || hash.isEmpty()) {
             hash = dashboardByHash.getReadonlyHash();
         }
-        addHashToLocalStorage(sharedPreferences, hash);
+        dashboardByHash.setHash(hash);
     }
 
     private void addHashToLocalStorage(SharedPreferences sharedPreferences, String hash) {

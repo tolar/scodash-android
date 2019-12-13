@@ -18,8 +18,8 @@ import okhttp3.Request;
 public class ServerWebsocketServiceProvider {
 
     // TODO implement SSL
-    private static final String WS_URL = "ws://www.scodash.com/ws/";
-    private static final String ORIGIN_HEADER = "http://www.scodash.com";
+    private static final String WS_URL = "ws://" + ScodashService.HOSTNAME + "/ws/";
+    private static final String ORIGIN_HEADER = "http://" + ScodashService.HOSTNAME;
 
     private OkHttpClient client;
 
