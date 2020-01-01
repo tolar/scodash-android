@@ -3,6 +3,8 @@ package com.scodash.android.services.impl;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.DashboardUpdateDto;
 import com.scodash.android.dto.Item;
@@ -10,20 +12,24 @@ import com.scodash.android.services.ServerRestService;
 import com.scodash.android.services.ServerWebsocketConnectionService;
 import com.tinder.scarlet.WebSocket;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.functions.Consumer;
+import okhttp3.Credentials;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -38,11 +44,12 @@ public class ScodashService {
      */
     private static final String HASHES = "HASHES";
     public static final String HOSTNAME = "www.scodash.com";
+    private static final String USERNAME = "scodashUser";
+    private static final String PASSWORD = "jacob";
+
     private Dashboard currentDashboard;
 
     private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
-
-    private Map<String, Dashboard> remoteDashboards = new HashMap<>();
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
@@ -60,9 +67,27 @@ public class ScodashService {
     }
 
     private void initServerRestService() {
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(new BasicAuthInterceptor(USERNAME, PASSWORD))
+                .addInterceptor(loggingInterceptor)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JodaModule());
+        objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
+                WRITE_DATES_AS_TIMESTAMPS , false);
+//        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz"));
+//        objectMapper.setDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'"));
+        JacksonConverterFactory converterFactory = JacksonConverterFactory.create(objectMapper);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(converterFactory)
+                .client(httpClient)
                 .build();
         serverRestService = retrofit.create(ServerRestService.class);
     }
@@ -75,9 +100,8 @@ public class ScodashService {
         this.currentDashboardChangeListeners.remove(changeListener);
     }
 
-    public void createDashboard(Dashboard newDashboard) {
-        // TODO create dashbaord on server
-        remoteDashboards.put(newDashboard.getWriteHash(), newDashboard);
+    public Call<Dashboard> createDashboard(Dashboard newDashboard) {
+        return serverRestService.createDashboard(newDashboard);
     }
 
     public void setCurrentDashboard(Dashboard dashboard) {
@@ -106,10 +130,6 @@ public class ScodashService {
 
     public Call<Dashboard> getRemoteDashboardByHash(String hash) {
         return serverRestService.getRemoteDashboardByHash(hash);
-    }
-
-    private List<Dashboard> getRemoteDashboards() {
-        return new ArrayList<>(remoteDashboards.values());
     }
 
     public Item getCurrentItem(int index, Sorting sorting) {
@@ -248,4 +268,20 @@ public class ScodashService {
     }
 
 
+    private class BasicAuthInterceptor implements Interceptor {
+
+        private String credentials;
+
+        public BasicAuthInterceptor(String user, String password) {
+            this.credentials = Credentials.basic(user, password);
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            Request authenticatedRequest = request.newBuilder()
+                    .header("Authorization", credentials).build();
+            return chain.proceed(authenticatedRequest);
+        }
+    }
 }

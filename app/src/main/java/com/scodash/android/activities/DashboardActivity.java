@@ -21,7 +21,7 @@ import com.scodash.android.services.impl.CurrentDashboardChangeListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 
-import java.text.DateFormat;
+import org.joda.time.format.DateTimeFormat;
 
 import javax.inject.Inject;
 
@@ -136,7 +136,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         String dashboardName = dashboard.getName() == null ? "" : dashboard.getName();
         String secondPartText = " created by ";
         String dashboardAuthor = dashboard.getOwnerName() == null ? "" :  dashboard.getOwnerName();
-        String thirdPart = " on " + DateFormat.getDateInstance().format(dashboard.getCreated());
+        String thirdPart = " on " +  dashboard.getCreated().toString(DateTimeFormat.shortDate());
         String textBeforeOwnerName = firstPartText + dashboardName + secondPartText;
         SpannableString str = new SpannableString(textBeforeOwnerName + dashboardAuthor + thirdPart);
         str.setSpan(new StyleSpan(BOLD), firstPartText.length(), firstPartText.length() + dashboardName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -145,7 +145,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     }
 
     private String prepareFooterLine2Text(Dashboard dashboard) {
-        return "Last update on " + DateFormat.getDateTimeInstance().format(dashboard.getUpdated());
+        return "Last update on " +  dashboard.getUpdated().toString(DateTimeFormat.shortDateTime());
     }
 
     private String getHashFromIntent() {

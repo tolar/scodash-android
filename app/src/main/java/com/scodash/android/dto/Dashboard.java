@@ -1,6 +1,10 @@
 package com.scodash.android.dto;
 
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.scodash.android.services.impl.CustomDateTimeSerializer;
+
+import org.joda.time.DateTime;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,9 +22,11 @@ public class Dashboard {
 
     private String ownerEmail;
 
-    private Date created;
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    private DateTime created;
 
-    private Date updated;
+    @JsonSerialize(using = CustomDateTimeSerializer.class)
+    private DateTime updated;
 
     private String hash;
 
@@ -30,19 +36,19 @@ public class Dashboard {
 
     public boolean deleted;
 
-    public Date getCreated() {
+    public DateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(DateTime created) {
         this.created = created;
     }
 
-    public Date getUpdated() {
+    public DateTime getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Date updated) {
+    public void setUpdated(DateTime updated) {
         this.updated = updated;
     }
 

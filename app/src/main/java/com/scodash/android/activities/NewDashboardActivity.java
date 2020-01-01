@@ -25,13 +25,17 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.scodash.android.R;
+import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.impl.ScodashService;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class NewDashboardActivity extends AppCompatActivity {
@@ -153,13 +157,30 @@ public class NewDashboardActivity extends AppCompatActivity {
         if (validationOk) {
             NewDashboard.getInstance().setOwnerName(name);
             NewDashboard.getInstance().setOwnerEmail(email);
-            NewDashboard.getInstance().setCreated(new Date());
-            NewDashboard.getInstance().setUpdated(new Date());
+            NewDashboard.getInstance().setCreated(new DateTime());
+            NewDashboard.getInstance().setUpdated(new DateTime());
 
-            scodashService.createDashboard(NewDashboard.getInstance());
-            scodashService.setCurrentDashboard(NewDashboard.getInstance());
-            Intent intent = new Intent(this, DashboardActivity.class);
-            startActivity(intent);
+            Activity thisActivity = this;
+            Call<Dashboard> call = scodashService.createDashboard(NewDashboard.getInstance());
+            call.enqueue(new Callback<Dashboard>() {
+                @Override
+                public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
+                    if (response.isSuccessful()) {
+                        Intent intent = new Intent(thisActivity, DashboardActivity.class);
+                        intent.putExtra(DashboardActivity.HASH, response.body().getWriteHash());
+                        thisActivity.startActivity(intent);
+                    }
+                    // TODO doimplementovat
+                }
+
+                @Override
+                public void onFailure(Call<Dashboard> call, Throwable t) {
+                    // TODO doimplementovat
+                }
+            });
+//            scodashService.setCurrentDashboard(NewDashboard.getInstance());
+//            Intent intent = new Intent(this, DashboardActivity.class);
+//            startActivity(intent);
         }
 
 
