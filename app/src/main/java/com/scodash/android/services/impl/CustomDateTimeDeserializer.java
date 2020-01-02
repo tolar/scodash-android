@@ -13,7 +13,6 @@ import java.io.IOException;
 public class CustomDateTimeDeserializer extends StdDeserializer<DateTime> {
 
     private static DateTimeFormatter formatter = ISODateTimeFormat.dateTimeParser();
-    //private static DateTimeFormatter formatterBasicDateTimeNoMillis = ISODateTimeFormat.dateTimeNoMillis();
 
     public CustomDateTimeDeserializer() {
         this(null);
@@ -24,12 +23,8 @@ public class CustomDateTimeDeserializer extends StdDeserializer<DateTime> {
         String dateTime = jsonParser.getText();
         try {
             return formatter.parseDateTime(dateTime);
-        } catch (IllegalArgumentException e1) {
-            try {
-                return formatter.parseDateTime(dateTime);
-            } catch (IllegalArgumentException e2) {
-                return null;
-            }
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 

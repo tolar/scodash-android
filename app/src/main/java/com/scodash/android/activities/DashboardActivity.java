@@ -22,6 +22,7 @@ import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.ISODateTimeFormat;
 
 import javax.inject.Inject;
 
@@ -138,7 +139,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         String dashboardAuthor = dashboard.getOwnerName() == null ? "" :  dashboard.getOwnerName();
         String thirdPart = "";
         if (dashboard.getCreated() != null) {
-            thirdPart = " on " + dashboard.getCreated().toString(DateTimeFormat.shortDate());
+            thirdPart = " on " + ISODateTimeFormat.date().print(dashboard.getCreated());
         }
         String textBeforeOwnerName = firstPartText + dashboardName + secondPartText;
         SpannableString str = new SpannableString(textBeforeOwnerName + dashboardAuthor + thirdPart);
@@ -149,7 +150,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     private String prepareFooterLine2Text(Dashboard dashboard) {
         if (dashboard.getUpdated() != null) {
-            return "Last update on " + dashboard.getUpdated().toString(DateTimeFormat.shortDateTime());
+            return "Last update on " + ISODateTimeFormat.dateTime().print(dashboard.getUpdated());
         }
         return "";
     }
