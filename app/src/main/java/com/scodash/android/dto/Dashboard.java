@@ -1,6 +1,8 @@
 package com.scodash.android.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.scodash.android.services.impl.CustomDateTimeDeserializer;
 import com.scodash.android.services.impl.CustomDateTimeSerializer;
 
 import org.joda.time.DateTime;
@@ -23,9 +25,11 @@ public class Dashboard {
     private String ownerEmail;
 
     @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     private DateTime created;
 
     @JsonSerialize(using = CustomDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     private DateTime updated;
 
     private String hash;

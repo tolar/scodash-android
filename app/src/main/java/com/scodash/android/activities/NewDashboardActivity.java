@@ -178,9 +178,6 @@ public class NewDashboardActivity extends AppCompatActivity {
                     // TODO doimplementovat
                 }
             });
-//            scodashService.setCurrentDashboard(NewDashboard.getInstance());
-//            Intent intent = new Intent(this, DashboardActivity.class);
-//            startActivity(intent);
         }
 
 
