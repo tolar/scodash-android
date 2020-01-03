@@ -21,7 +21,6 @@ import com.scodash.android.services.impl.CurrentDashboardChangeListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
 
 import javax.inject.Inject;
@@ -150,7 +149,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     private String prepareFooterLine2Text(Dashboard dashboard) {
         if (dashboard.getUpdated() != null) {
-            return "Last update on " + ISODateTimeFormat.dateTime().print(dashboard.getUpdated());
+            return "Last update on " + ISODateTimeFormat.date().print(dashboard.getUpdated()) + " " + ISODateTimeFormat.hourMinuteSecond().print(dashboard.getUpdated());
         }
         return "";
     }
