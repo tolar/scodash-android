@@ -8,8 +8,11 @@ import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -193,6 +196,14 @@ public class NewDashboardActivity extends AppCompatActivity {
             dismissNoItemSnackbar();
             dashboardItemsFragment.notifyItemsChanged();
         }
+        ScrollView scrollView = findViewById(R.id.new_items_scroll_view);
+        FrameLayout buttonsLayoutView = findViewById(R.id.bottom_buttons);
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.smoothScrollTo(0, buttonsLayoutView.getBottom());
+            }
+        });
     }
 
     private void dismissNoItemSnackbar() {

@@ -7,11 +7,14 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.ShareActionProvider;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +45,8 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     private DashboardItemsAdapter itemsAdapter;
 
+    private ShareActionProvider shareActionProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +75,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         });
     }
 
+
     private void redirectToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -86,16 +92,13 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         updateTextViews(dashboard);
 
         RadioGroup radioGroupView = findViewById(R.id.sort);
-        radioGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.sort_score) {
-                    itemsAdapter.setSorting(Sorting.SCORE);
-                } else {
-                    itemsAdapter.setSorting(Sorting.AZ);
-                }
-                itemsAdapter.notifyDataSetChanged();
+        radioGroupView.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.sort_score) {
+                itemsAdapter.setSorting(Sorting.SCORE);
+            } else {
+                itemsAdapter.setSorting(Sorting.AZ);
             }
+            itemsAdapter.notifyDataSetChanged();
         });
 
 
@@ -180,8 +183,42 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share_dashboard);
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setShareActionIntent() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, scodashService.getCurrentDashboardUrl());
+        shareActionProvider.setShareIntent(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_create_dashboard:
+                startNewDashboardActivity();
+                return true;
+            case R.id.action_go_home:
+                startMainActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+    }
+
+    private void startNewDashboardActivity() {
+        Intent intent = new Intent(this, NewDashboardActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -191,6 +228,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             public void run() {
                 itemsAdapter.notifyDataSetChanged();
                 updateTextViews(dashboard);
+                setShareActionIntent();
             }
         });
     }

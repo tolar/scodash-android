@@ -2,6 +2,8 @@
 
     <string name="app_name">ScoDash  Android</string>
     <string name="new_dashboard">New dashboard</string>
+    <string name="go_home">Homepage</string>
+    <string name="share_dashboard">Share dashboard</string>
 
     <string name="dashboard_name_tab">Name</string>
     <string name="dashboard_items_tab">Items</string>

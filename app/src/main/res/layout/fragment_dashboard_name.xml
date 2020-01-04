@@ -1,57 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/new_items_scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    android:orientation="vertical"
-    tools:context=".activities.NewDashboardActivity">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_input_layout"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activities.NewDashboardActivity">
 
-        <EditText
-            android:id="@+id/dashboard_name"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:hint="@string/dashboard_name_hint" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_margin="16dp">
+            <EditText
+                android:id="@+id/dashboard_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dashboard_name_hint"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/description_input_layout"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="16dp"
-        >
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/description_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
 
-    <EditText
-        android:id="@+id/dashboard_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:hint="@string/dashboard_description_hint"
-        />
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/dashboard_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dashboard_description_hint"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+            <Button
+                style="@style/NextButton"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:onClick="nameStepNextButtonClicked" />
+        </FrameLayout>
+    </LinearLayout>
 
-        <Button
-            style="@style/NextButton"
-            android:onClick="nameStepNextButtonClicked"
-            android:layout_height="match_parent"
-            android:layout_gravity="right" />
-
-    </FrameLayout>
-
-
-</LinearLayout>
+</ScrollView>

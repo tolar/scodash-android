@@ -128,6 +128,10 @@ public class ScodashService {
         return currentDashboard;
     }
 
+    public String getCurrentDashboardUrl(){
+        return "https://www.scodash.com/dashboard/" + currentDashboard.getHash();
+    }
+
     public Call<Dashboard> getRemoteDashboardByHash(String hash) {
         return serverRestService.getRemoteDashboardByHash(hash);
     }
