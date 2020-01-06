@@ -39,6 +39,7 @@ public class MainActivity extends ScodashActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setLogo(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setTitle("");
 
         if (scodashService.getHashesFromLocalStorage(getScodashSharedPreferences()).size() > 0) {
 

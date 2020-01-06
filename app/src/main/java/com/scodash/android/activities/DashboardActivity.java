@@ -179,6 +179,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         ActionBar actionBar = getSupportActionBar();
         actionBar.setLogo(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setTitle("");
     }
 
     @Override
