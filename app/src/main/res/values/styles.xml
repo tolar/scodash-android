@@ -9,6 +9,7 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionModeShareDrawable">@drawable/baseline_share_black_18</item>
     </style>
 
     <style name="BackButton" parent="@style/Widget.AppCompat.ImageButton">
