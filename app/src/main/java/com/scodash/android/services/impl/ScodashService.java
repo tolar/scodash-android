@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -80,8 +81,6 @@ public class ScodashService {
         objectMapper.registerModule(new JodaModule());
         objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
                 WRITE_DATES_AS_TIMESTAMPS , false);
-//        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz"));
-//        objectMapper.setDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'"));
         JacksonConverterFactory converterFactory = JacksonConverterFactory.create(objectMapper);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -101,7 +100,16 @@ public class ScodashService {
     }
 
     public Call<Dashboard> createDashboard(Dashboard newDashboard) {
+        populateItemsIndexes(newDashboard);
         return serverRestService.createDashboard(newDashboard);
+    }
+
+    private void populateItemsIndexes(Dashboard newDashboard) {
+        Item[] items = newDashboard.getItems().toArray(new Item[newDashboard.getItems().size()]);
+        for (int i = 0; i < items.length; i++) {
+            Item item = items[i];
+            item.setId(i);
+        }
     }
 
     public void setCurrentDashboard(Dashboard dashboard) {

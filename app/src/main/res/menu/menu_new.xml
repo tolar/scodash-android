@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
-        android:id="@+id/action_create_dashboard"
-        android:title="@string/new_dashboard"
-        android:icon="@drawable/round_add_black_24"
+        android:id="@+id/action_go_home"
+        android:title="@string/go_home"
+        android:icon="@drawable/baseline_home_black_24"
         app:showAsAction="always"
         />
 </menu>

@@ -214,7 +214,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
     }
 
     private void startNewDashboardActivity() {
