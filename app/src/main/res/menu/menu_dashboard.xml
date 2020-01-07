@@ -17,7 +17,12 @@
     <item
         android:id="@+id/action_share_dashboard"
         android:title="@string/share_dashboard"
-        app:actionProviderClass="com.scodash.android.activities.ScodashShareActionProvider"
+        android:icon="@drawable/baseline_share_black_24"
         app:showAsAction="always"
+        />
+    <item
+        android:title="@string/share_dashboard"
+        app:actionProviderClass="com.scodash.android.activities.ScodashShareActionProvider"
+        app:showAsAction="never"
         />
 </menu>

@@ -31,4 +31,9 @@
 
     <string name="preference_file_key">com.scodash.android.PREFERENCE_FILE_KEY</string>
 
+    <string-array name="share_options">
+        <item>View-only mode</item>
+        <item>Change mode</item>
+    </string-array>
+
 </resources>

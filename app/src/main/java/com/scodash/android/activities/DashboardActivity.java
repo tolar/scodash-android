@@ -1,5 +1,7 @@
 package com.scodash.android.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
@@ -185,8 +188,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dashboard, menu);
-        MenuItem menuItem = menu.findItem(R.id.action_share_dashboard);
-        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -206,9 +207,36 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             case R.id.action_go_home:
                 startMainActivity();
                 return true;
+            case R.id.action_share_dashboard:
+                showShareDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showShareDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Share the dashboard");
+        dialog.setSingleChoiceItems(R.array.share_options,0, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void startMainActivity() {
@@ -228,7 +256,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             public void run() {
                 itemsAdapter.notifyDataSetChanged();
                 updateTextViews(dashboard);
-                setShareActionIntent();
+                //setShareActionIntent();
             }
         });
     }
