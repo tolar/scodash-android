@@ -136,8 +136,12 @@ public class ScodashService {
         return currentDashboard;
     }
 
-    public String getCurrentDashboardUrl(){
-        return "https://www.scodash.com/dashboard/" + currentDashboard.getHash();
+    public String getCurrentWriteDashboardUrl(){
+        return "https://www.scodash.com/dashboard/" + currentDashboard.getWriteHash();
+    }
+
+    public String getCurrentReadonlyDashboardUrl(){
+        return "https://www.scodash.com/dashboard/" + currentDashboard.getReadonlyHash();
     }
 
     public Call<Dashboard> getRemoteDashboardByHash(String hash) {

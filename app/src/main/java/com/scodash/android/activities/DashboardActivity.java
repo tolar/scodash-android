@@ -1,6 +1,5 @@
 package com.scodash.android.activities;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,9 +14,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.ShareActionProvider;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,7 +45,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     private DashboardItemsAdapter itemsAdapter;
 
-    private ShareActionProvider shareActionProvider;
+    private String shareUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,13 +188,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void setShareActionIntent() {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, scodashService.getCurrentDashboardUrl());
-        shareActionProvider.setShareIntent(intent);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -221,7 +211,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         dialog.setSingleChoiceItems(R.array.share_options,0, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                shareUrl = which == 0 ? scodashService.getCurrentReadonlyDashboardUrl() : scodashService.getCurrentWriteDashboardUrl();
             }
         });
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -230,10 +220,13 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
                 dialog.dismiss();
             }
         });
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("Share", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
         dialog.show();

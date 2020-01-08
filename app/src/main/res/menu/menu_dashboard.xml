@@ -9,20 +9,15 @@
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/action_create_dashboard"
-        android:title="@string/new_dashboard"
-        android:icon="@drawable/round_add_black_24"
-        app:showAsAction="always"
-        />
-    <item
         android:id="@+id/action_share_dashboard"
         android:title="@string/share_dashboard"
         android:icon="@drawable/baseline_share_black_24"
         app:showAsAction="always"
         />
     <item
-        android:title="@string/share_dashboard"
-        app:actionProviderClass="com.scodash.android.activities.ScodashShareActionProvider"
-        app:showAsAction="never"
+        android:id="@+id/action_create_dashboard"
+        android:title="@string/new_dashboard"
+        android:icon="@drawable/round_add_black_24"
+        app:showAsAction="always"
         />
 </menu>
