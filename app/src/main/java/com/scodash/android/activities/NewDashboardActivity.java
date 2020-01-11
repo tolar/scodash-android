@@ -7,10 +7,8 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -19,10 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ShareActionProvider;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -34,6 +29,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.impl.ScodashService;
+import com.scodash.android.utils.NetworkUtility;
 
 import org.joda.time.DateTime;
 
@@ -45,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class NewDashboardActivity extends AppCompatActivity {
+public class NewDashboardActivity extends ScodashActivity {
 
     public static final int NAME_TAB_POSITION = 0;
     public static final int ITEMS_TAB_POSITION = 1;
@@ -58,6 +54,7 @@ public class NewDashboardActivity extends AppCompatActivity {
     private StepsPageAdapter stepsPageAdapter;
     private DashboardItemsFragment dashboardItemsFragment;
     private Snackbar noItemSnackbard;
+    private Snackbar noInternetSnackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,8 +132,7 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     public void itemsStepNextButtonClicked(View view) {
         if (NewDashboard.getInstance().getItems().isEmpty()) {
-            getNoItemSnackbar();
-            noItemSnackbard.show();
+            showNoItemSnackbar();
             return;
         }
         viewPager.setCurrentItem(AUTHOR_TAB_POSITION);
@@ -155,6 +151,23 @@ public class NewDashboardActivity extends AppCompatActivity {
         snackbarView.setBackgroundColor(getResources().getColor(R.color.colorErrorBackground));
         return noItemSnackbard;
     }
+
+
+    private Snackbar getNoInternetConnectionSnackbar() {
+        if (noInternetSnackbar != null) {
+            return noInternetSnackbar;
+        }
+        noInternetSnackbar = Snackbar.make(findViewById(R.id.new_items), R.string.no_internet_later, Snackbar.LENGTH_INDEFINITE);
+        int snackbarTextId = R.id.snackbar_text;
+        View snackbarView = noInternetSnackbar.getView();
+        snackbarView.findViewById(snackbarTextId);
+        TextView snackbarTextView = snackbarView.findViewById(snackbarTextId);
+        snackbarTextView.setTextColor(getResources().getColor(R.color.colorErrorText));
+        noInternetSnackbar.setActionTextColor(getResources().getColor(R.color.colorPureBlack));
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorErrorBackground));
+        return noInternetSnackbar;
+    }
+
 
     public void authorStepPrevButtonClicked(View view) {
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
@@ -181,6 +194,13 @@ public class NewDashboardActivity extends AppCompatActivity {
             validationOk = false;
         }
         if (validationOk) {
+
+            boolean offline = !NetworkUtility.isNetWorkAvailableNow(this);
+            if (offline) {
+                showNoInternetSnackbar();
+                return;
+            }
+
             NewDashboard.getInstance().setOwnerName(name);
             NewDashboard.getInstance().setOwnerEmail(email);
             NewDashboard.getInstance().setCreated(new DateTime());
@@ -235,6 +255,10 @@ public class NewDashboardActivity extends AppCompatActivity {
 
     private void showNoItemSnackbar() {
         getNoItemSnackbar().show();
+    }
+
+    private void showNoInternetSnackbar() {
+        getNoInternetConnectionSnackbar().show();
     }
 
     public void removeItem(View view) {

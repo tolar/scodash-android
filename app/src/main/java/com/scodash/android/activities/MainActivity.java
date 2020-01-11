@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.services.impl.ScodashService;
+import com.scodash.android.utils.NetworkUtility;
 
 import javax.inject.Inject;
 
@@ -31,7 +32,13 @@ public class MainActivity extends ScodashActivity {
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
-        setContentView(R.layout.activity_main);
+        boolean offline = !NetworkUtility.isNetWorkAvailableNow(this);
+
+        int layoutId = R.layout.activity_main;
+        if (offline) {
+            layoutId =  R.layout.no_internet;
+        }
+        setContentView(layoutId);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,6 +48,14 @@ public class MainActivity extends ScodashActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setTitle("");
 
+        if (offline) {
+            showNoInternetSnackbarWithRetryAction();
+        } else {
+            showRecents();
+        }
+    }
+
+    private void showRecents() {
         if (scodashService.getHashesFromLocalStorage(getScodashSharedPreferences()).size() > 0) {
 
             RecyclerView itemsRecyler = findViewById(R.id.recents);

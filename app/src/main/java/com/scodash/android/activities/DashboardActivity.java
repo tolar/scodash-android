@@ -23,6 +23,7 @@ import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.impl.CurrentDashboardChangeListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
+import com.scodash.android.utils.NetworkUtility;
 
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -47,14 +48,33 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     private String shareUrl;
 
+    private boolean offline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
-        setContentView(R.layout.activity_dashboard);
+        offline = !NetworkUtility.isNetWorkAvailableNow(this);
+
+        int layoutId;
+        if (offline) {
+            layoutId = R.layout.no_internet;
+        } else {
+            layoutId = R.layout.activity_dashboard;
+        }
+
+        setContentView(layoutId);
         setupToolbar();
 
+        if (offline) {
+            showNoInternetSnackbarWithRetryAction();
+        } else {
+            showDashboard();
+        }
+    }
+
+    private void showDashboard() {
         final String hash = getHashFromIntent();
         Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
         call.enqueue(new Callback<Dashboard>() {
@@ -184,7 +204,11 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+        if (offline) {
+            getMenuInflater().inflate(R.menu.menu_dashboard_no_internet, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -253,4 +277,5 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             }
         });
     }
+
 }
