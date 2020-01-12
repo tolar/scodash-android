@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -222,7 +223,12 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
                 startMainActivity();
                 return true;
             case R.id.action_share_dashboard:
-                showShareDialog();
+                shareUrl = scodashService.getCurrentReadonlyDashboardUrl();
+                if (TextUtils.isEmpty(scodashService.getCurrentDashboard().getWriteHash())) {
+                    startSharing();
+                } else {
+                    showShareDialog();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -232,6 +238,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     private void showShareDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Share the dashboard");
+        shareUrl = scodashService.getCurrentReadonlyDashboardUrl();
         dialog.setSingleChoiceItems(R.array.share_options,0, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -247,13 +254,17 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         dialog.setPositiveButton("Share", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                startSharing();
             }
         });
         dialog.show();
+    }
+
+    private void startSharing() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     private void startMainActivity() {
