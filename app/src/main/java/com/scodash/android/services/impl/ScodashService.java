@@ -1,6 +1,7 @@
 package com.scodash.android.services.impl;
 
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -205,7 +206,8 @@ public class ScodashService {
         if (hash == null || dashboard == null) {
             return false;
         }
-        if (hash.equals(dashboard.getHash()) || hash.equals(dashboard.getReadonlyHash()) || hash.equals(dashboard.getWriteHash())) {
+        if (hash.equals(dashboard.getReadonlyHash()) && TextUtils.isEmpty(dashboard.getWriteHash())
+                || hash.equals(dashboard.getWriteHash())) {
             return true;
         }
         return false;
@@ -219,7 +221,7 @@ public class ScodashService {
 
     public void populateAccessHash(Dashboard dashboardByHash) {
         String hash = dashboardByHash.getWriteHash();
-        if (hash == null || hash.isEmpty()) {
+        if (TextUtils.isEmpty(hash)) {
             hash = dashboardByHash.getReadonlyHash();
         }
         dashboardByHash.setHash(hash);
