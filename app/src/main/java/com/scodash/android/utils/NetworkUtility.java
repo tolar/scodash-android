@@ -14,6 +14,10 @@ public class NetworkUtility {
 
     public static boolean isNetWorkAvailableNow(Context context) {
 
+        return true;
+
+        /*
+
         boolean isNetworkAvailable = false;
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -27,6 +31,8 @@ public class NetworkUtility {
         }
 
         return isNetworkAvailable;
+
+         */
 
 
     }

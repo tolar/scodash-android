@@ -26,6 +26,7 @@ public class MainActivity extends ScodashActivity {
 
     @Inject
     ScodashService scodashService;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends ScodashActivity {
         }
         setContentView(layoutId);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -66,9 +67,11 @@ public class MainActivity extends ScodashActivity {
 
             ViewGroup intro_container = findViewById(R.id.intro_container);
             intro_container.removeAllViews();
+            toolbar.setVisibility(View.VISIBLE);
         } else {
             ViewGroup recents_container = findViewById(R.id.recents_container);
             recents_container.removeAllViews();
+            toolbar.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -90,6 +93,10 @@ public class MainActivity extends ScodashActivity {
     }
 
     public void onClickAdd(View view) {
+        startNewDashboardActivity();
+    }
+
+    public void onClickStart(View view) {
         startNewDashboardActivity();
     }
 

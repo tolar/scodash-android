@@ -28,6 +28,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     private final Context context;
     private final ScodashService scodashService;
     private final ScodashActivity scodashActivity;
+    private Snackbar snackbar;
 
     public RecentDashboardsAdapter(Context context, ScodashService scodashService, ScodashActivity scodashActivity) {
         this.context = context;
@@ -88,22 +89,27 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
             public void onClick(View v) {
                 scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
 
-                notifyDataSetChanged();
-
-                Snackbar snackbar = Snackbar.make(scodashActivity.findViewById(R.id.coordinator), R.string.recent_dashboard_removed, Snackbar.LENGTH_LONG);
+                snackbar = Snackbar.make(scodashActivity.findViewById(R.id.coordinator), R.string.recent_dashboard_removed, Snackbar.LENGTH_LONG);
                 snackbar.getView().setBackgroundColor(ContextCompat.getColor(scodashActivity, R.color.greenAddColor));
                 snackbar.setActionTextColor(ContextCompat.getColor(scodashActivity, R.color.colorPureWhite));
                 snackbar.setTextColor(ContextCompat.getColor(scodashActivity, R.color.colorPureWhite));
+
                 snackbar.setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         scodashService.putHashToLocalStorage(scodashActivity.getScodashSharedPreferences(), hash);
-                        notifyDataSetChanged();
+                        handleRecentsChanged();
                     }
                 });
                 snackbar.show();
+                handleRecentsChanged();
             }
         });
+    }
+
+    private void handleRecentsChanged() {
+        notifyDataSetChanged();
+        scodashActivity.recreate();
     }
 
     private void startDashboardActivity(String hash) {

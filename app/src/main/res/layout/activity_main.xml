@@ -39,21 +39,33 @@
     <LinearLayout
         android:id="@+id/intro_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            />
 
         <TextView
             android:id="@+id/intro_text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_gravity="center_horizontal"
-            android:text="Simple online scoring dashboard"
-            android:textSize="30sp" />
+            android:text="@string/intro_text"
+            android:textSize="18sp" />
 
         <Button
-            style="@style/CreateDashboardButton"
+            style="@style/BlueButton"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-             />
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="15dp"
+            android:onClick="onClickStart"
+            android:text="@string/start" />
 
     </LinearLayout>
 
