@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,6 +48,7 @@ public class ScodashService {
     private static final String PASSWORD = "jacob";
 
     private Dashboard currentDashboard;
+    private Dashboard newDashboard;
 
     private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
 
@@ -251,6 +251,16 @@ public class ScodashService {
         return getHashesFromLocalStorage(sharedPreferences).contains(hash);
     }
 
+    public Dashboard getNewDashboard() {
+        if (newDashboard == null) {
+            newDashboard = new Dashboard();
+        }
+        return newDashboard;
+    }
+
+    public void resetNewDashbord() {
+        newDashboard = new Dashboard();
+    }
 
     class AzComparator implements Comparator<Item> {
 

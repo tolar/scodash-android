@@ -61,6 +61,8 @@ public class NewDashboardActivity extends ScodashActivity {
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
+        scodashService.resetNewDashbord();
+
         setContentView(R.layout.activity_new_dashboard);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -82,7 +84,7 @@ public class NewDashboardActivity extends ScodashActivity {
             tabStrip.getChildAt(i).setOnTouchListener((v, event) -> true);
         }
 
-        dashboardItemsFragment = new DashboardItemsFragment();
+        dashboardItemsFragment = new DashboardItemsFragment(scodashService);
 
     }
 
@@ -118,10 +120,10 @@ public class NewDashboardActivity extends ScodashActivity {
             nameInputLayout.setError(getString(R.string.dashboard_name_mandatory));
             return;
         }
-        NewDashboard.getInstance().setName(name);
+        scodashService.getNewDashboard().setName(name);
         EditText descriptionEditText = findViewById(R.id.dashboard_description);
         String description = descriptionEditText.getText().toString();
-        NewDashboard.getInstance().setDescription(description);
+        scodashService.getNewDashboard().setDescription(description);
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
     }
 
@@ -131,7 +133,7 @@ public class NewDashboardActivity extends ScodashActivity {
     }
 
     public void itemsStepNextButtonClicked(View view) {
-        if (NewDashboard.getInstance().getItems().isEmpty()) {
+        if (scodashService.getNewDashboard().getItems().isEmpty()) {
             showNoItemSnackbar();
             return;
         }
@@ -201,13 +203,13 @@ public class NewDashboardActivity extends ScodashActivity {
                 return;
             }
 
-            NewDashboard.getInstance().setOwnerName(name);
-            NewDashboard.getInstance().setOwnerEmail(email);
-            NewDashboard.getInstance().setCreated(new DateTime());
-            NewDashboard.getInstance().setUpdated(new DateTime());
+            scodashService.getNewDashboard().setOwnerName(name);
+            scodashService.getNewDashboard().setOwnerEmail(email);
+            scodashService.getNewDashboard().setCreated(new DateTime());
+            scodashService.getNewDashboard().setUpdated(new DateTime());
 
             Activity thisActivity = this;
-            Call<Dashboard> call = scodashService.createDashboard(NewDashboard.getInstance());
+            Call<Dashboard> call = scodashService.createDashboard(scodashService.getNewDashboard());
             call.enqueue(new Callback<Dashboard>() {
                 @Override
                 public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
@@ -234,7 +236,7 @@ public class NewDashboardActivity extends ScodashActivity {
         EditText editText = findViewById(R.id.new_item_name);
         String item = editText.getText().toString();
         if (!TextUtils.isEmpty(item)) {
-            NewDashboard.getInstance().addItem(item);
+            scodashService.getNewDashboard().addItem(item);
             editText.setText("");
             dismissNoItemSnackbar();
             dashboardItemsFragment.notifyItemsChanged();
@@ -264,7 +266,7 @@ public class NewDashboardActivity extends ScodashActivity {
     public void removeItem(View view) {
         ViewParent viewParent = view.getParent();
         TextView itemToRemove = ((LinearLayout)viewParent).findViewById(R.id.item_name);
-        NewDashboard.getInstance().removeItem(itemToRemove.getText().toString());
+        scodashService.getNewDashboard().removeItem(itemToRemove.getText().toString());
         dashboardItemsFragment.notifyItemsChanged();
     }
 

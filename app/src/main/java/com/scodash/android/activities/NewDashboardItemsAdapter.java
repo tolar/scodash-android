@@ -1,18 +1,23 @@
 package com.scodash.android.activities;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scodash.android.R;
 import com.scodash.android.dto.Item;
+import com.scodash.android.services.impl.ScodashService;
 
 public class NewDashboardItemsAdapter extends RecyclerView.Adapter<NewDashboardItemsAdapter.ViewHolder> {
 
-    public NewDashboardItemsAdapter() {
+    private final ScodashService scodashService;
+
+    public NewDashboardItemsAdapter(ScodashService scodashService) {
+        this.scodashService = scodashService;
     }
 
     @NonNull
@@ -26,12 +31,12 @@ public class NewDashboardItemsAdapter extends RecyclerView.Adapter<NewDashboardI
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         CardView itemView = viewHolder.itemView;
         TextView textView = itemView.findViewById(R.id.item_name);
-        textView.setText((NewDashboard.getInstance().getItems().toArray(new Item[0]))[i].getName());
+        textView.setText((scodashService.getNewDashboard().getItems().toArray(new Item[0]))[i].getName());
     }
 
     @Override
     public int getItemCount() {
-        return NewDashboard.getInstance().getItems().size();
+        return scodashService.getNewDashboard().getItems().size();
     }
 
 

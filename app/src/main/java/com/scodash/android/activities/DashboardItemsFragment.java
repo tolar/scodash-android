@@ -1,9 +1,6 @@
 package com.scodash.android.activities;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,14 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scodash.android.R;
+import com.scodash.android.services.impl.ScodashService;
 
 
 public class DashboardItemsFragment extends Fragment {
 
+    private final ScodashService scodashService;
+
     private NewDashboardItemsAdapter itemsAdapter;
 
-    public DashboardItemsFragment() {
+    public DashboardItemsFragment(ScodashService scodashService) {
+        this.scodashService = scodashService;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class DashboardItemsFragment extends Fragment {
 
     private void attachItemsAdapter(View rootView) {
         RecyclerView itemsRecyler = rootView.findViewById(R.id.new_items);
-        itemsAdapter = new NewDashboardItemsAdapter();
+        itemsAdapter = new NewDashboardItemsAdapter(scodashService);
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
