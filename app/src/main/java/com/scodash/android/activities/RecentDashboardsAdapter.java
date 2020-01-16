@@ -87,6 +87,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
             @Override
             public void onClick(View v) {
                 scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+
                 notifyDataSetChanged();
 
                 Snackbar snackbar = Snackbar.make(scodashActivity.findViewById(R.id.coordinator), R.string.recent_dashboard_removed, Snackbar.LENGTH_LONG);

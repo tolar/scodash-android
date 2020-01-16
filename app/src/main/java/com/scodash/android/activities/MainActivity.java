@@ -63,6 +63,9 @@ public class MainActivity extends ScodashActivity {
             itemsRecyler.setAdapter(recentDashboardsAdapter);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             itemsRecyler.setLayoutManager(layoutManager);
+
+            ViewGroup intro_container = findViewById(R.id.intro_container);
+            intro_container.removeAllViews();
         } else {
             ViewGroup recents_container = findViewById(R.id.recents_container);
             recents_container.removeAllViews();
