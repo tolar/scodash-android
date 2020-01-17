@@ -17,23 +17,25 @@
         <activity android:name=".activities.DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="*.scodash.com"
-                    android:pathPattern="/dashboard/..*" />
+                    android:pathPattern="/dashboard/..*"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="*.scodash.com"
-                    android:pathPattern="/dashboard/..*" />
+                    android:pathPattern="/dashboard/..*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity">
@@ -43,23 +45,23 @@
             </intent-filter>
             <intent-filter android:order="1">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="*.scodash.com"
-                     />
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter android:order="1">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="*.scodash.com"
-                     />
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity

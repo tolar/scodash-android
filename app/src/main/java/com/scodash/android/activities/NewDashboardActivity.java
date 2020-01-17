@@ -219,12 +219,10 @@ public class NewDashboardActivity extends ScodashActivity {
                         intent.putExtra(DashboardActivity.HASH, response.body().getWriteHash());
                         thisActivity.startActivity(intent);
                     }
-                    // TODO doimplementovat
                 }
 
                 @Override
                 public void onFailure(Call<Dashboard> call, Throwable t) {
-                    // TODO doimplementovat
                 }
             });
         }

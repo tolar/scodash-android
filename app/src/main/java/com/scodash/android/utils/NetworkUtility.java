@@ -2,7 +2,6 @@ package com.scodash.android.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -46,7 +45,7 @@ public class NetworkUtility {
             e.printStackTrace();
         } finally {
             long t2 = Calendar.getInstance().getTimeInMillis();
-            Log.i("NetWork check Time", (t2 - t) + "");
+            //Log.i("NetWork check Time", (t2 - t) + "");
         }
         return false;
     }

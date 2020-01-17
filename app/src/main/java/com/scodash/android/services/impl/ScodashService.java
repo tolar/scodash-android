@@ -2,7 +2,6 @@ package com.scodash.android.services.impl;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -181,7 +180,6 @@ public class ScodashService {
 
 
     private void connectToServer(String hash) {
-        Log.d(this.getClass().getSimpleName(), "Connecting to server with hash " + hash);
         serverWebsocketConnectionService = serverWebsocketServiceProvider.getInstance(hash);
         serverWebsocketConnectionService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
             @Override
@@ -197,7 +195,6 @@ public class ScodashService {
         serverWebsocketConnectionService.observeWebsocketEvent().subscribe(new Consumer<WebSocket.Event>() {
             @Override
             public void accept(WebSocket.Event event) throws Exception {
-                Log.d(this.getClass().getSimpleName(), event.toString());
             }
         });
     }
