@@ -20,17 +20,20 @@ import com.scodash.android.dto.DashboardUpdateDto;
 import com.scodash.android.dto.Item;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
+import com.scodash.android.utils.NetworkUtility;
 
 import java.util.Date;
 
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 
     private final ScodashService scodashService;
+    private final ScodashActivity scodashActivity;
 
     private Sorting sorting = Sorting.AZ;
 
-    public DashboardItemsAdapter(ScodashService scodashService) {
+    public DashboardItemsAdapter(ScodashService scodashService, ScodashActivity scodashActivity) {
         this.scodashService = scodashService;
+        this.scodashActivity = scodashActivity;
     }
 
     @NonNull
@@ -58,6 +61,10 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
             incBtnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!NetworkUtility.isNetWorkAvailableNow(scodashActivity)) {
+                        scodashActivity.recreate();
+                        return;
+                    }
                     item.setScore(item.getScore() + 1);
                     notifyDataSetChanged();
                     scodashService.sendUpdateDataToServer(
@@ -69,6 +76,10 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
             decBtnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!NetworkUtility.isNetWorkAvailableNow(scodashActivity)) {
+                        scodashActivity.recreate();
+                        return;
+                    }
                     if (item.getScore() > 0) {
                         item.setScore(item.getScore() - 1);
                         notifyDataSetChanged();

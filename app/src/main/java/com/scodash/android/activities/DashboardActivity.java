@@ -124,7 +124,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
 
         RecyclerView itemsRecyler = findViewById(R.id.items);
-        itemsAdapter = new DashboardItemsAdapter(scodashService);
+        itemsAdapter = new DashboardItemsAdapter(scodashService, this);
         itemsRecyler.setAdapter(itemsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
