@@ -48,7 +48,7 @@
             style="@style/CreateDashboardButton"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:onClick="authorCreateDashboardlicked" />
+            android:onClick="authorCreateDashboardClicked" />
 
         <ImageButton
             style="@style/BackButton"

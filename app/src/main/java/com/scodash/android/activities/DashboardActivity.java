@@ -284,7 +284,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             public void run() {
                 itemsAdapter.notifyDataSetChanged();
                 updateTextViews(dashboard);
-                //setShareActionIntent();
             }
         });
     }

@@ -32,6 +32,7 @@ import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.utils.NetworkUtility;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import javax.inject.Inject;
 
@@ -175,7 +176,7 @@ public class NewDashboardActivity extends ScodashActivity {
         viewPager.setCurrentItem(ITEMS_TAB_POSITION);
     }
 
-    public void authorCreateDashboardlicked(View view) {
+    public void authorCreateDashboardClicked(View view) {
 
         boolean validationOk = true;
         EditText authorNameEditText = findViewById(R.id.author_name);
@@ -205,8 +206,8 @@ public class NewDashboardActivity extends ScodashActivity {
 
             scodashService.getNewDashboard().setOwnerName(name);
             scodashService.getNewDashboard().setOwnerEmail(email);
-            scodashService.getNewDashboard().setCreated(new DateTime());
-            scodashService.getNewDashboard().setUpdated(new DateTime());
+            scodashService.getNewDashboard().setCreated(DateTime.now(DateTimeZone.UTC));
+            scodashService.getNewDashboard().setUpdated(DateTime.now(DateTimeZone.UTC));
 
             Activity thisActivity = this;
             Call<Dashboard> call = scodashService.createDashboard(scodashService.getNewDashboard());
