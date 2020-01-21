@@ -139,4 +139,23 @@ public class Dashboard {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Dashboard{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", items=").append(items);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", ownerName='").append(ownerName).append('\'');
+        sb.append(", ownerEmail='").append(ownerEmail).append('\'');
+        sb.append(", created=").append(created);
+        sb.append(", updated=").append(updated);
+        sb.append(", hash='").append(hash).append('\'');
+        sb.append(", writeHash='").append(writeHash).append('\'');
+        sb.append(", readonlyHash='").append(readonlyHash).append('\'');
+        sb.append(", deleted=").append(deleted);
+        sb.append('}');
+        return sb.toString();
+    }
 }

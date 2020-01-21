@@ -2,11 +2,13 @@ package com.scodash.android.services.impl;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.DashboardUpdateDto;
+import com.scodash.android.dto.HashNameTuple;
 import com.scodash.android.dto.Item;
 import com.scodash.android.services.ServerRestService;
 import com.scodash.android.services.ServerWebsocketConnectionService;
@@ -16,8 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -54,10 +58,13 @@ public class ScodashService {
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
+    private Comparator<HashNameTuple> hashNameTupleComparator;
 
     private ServerWebsocketConnectionService serverWebsocketConnectionService;
 
     private ServerRestService serverRestService;
+
+    private Map<String, String> dashboardNamesPerHash = new HashMap<>();
 
     @Inject
     ServerWebsocketServiceProvider serverWebsocketServiceProvider;
@@ -114,7 +121,11 @@ public class ScodashService {
 
     public void setCurrentDashboard(Dashboard dashboard) {
         currentDashboard = dashboard;
-        notifyListener();
+        if (dashboard != null) {
+            Log.d("setCurrentDashboard", dashboard.toString());
+            dashboardNamesPerHash.put(dashboard.getHash(), dashboard.getName());
+            notifyListener();
+        }
     }
 
     public void connectToDashboardOnServer(String hash) {
@@ -171,10 +182,19 @@ public class ScodashService {
             scoreComparator = new ScoreComparator();
         }
         return scoreComparator;
+    }
 
+    public Comparator<HashNameTuple> getHashNameTupleComparator() {
+        if (hashNameTupleComparator == null) {
+            hashNameTupleComparator = new HashNameComparator();
+        }
+        return hashNameTupleComparator;
     }
 
     public int getCurrentDashboardItemCount() {
+        if (currentDashboard == null) {
+            return 0;
+        }
         return currentDashboard.getItems().size();
     }
 
@@ -241,9 +261,19 @@ public class ScodashService {
     }
 
     public List<String> getHashesFromLocalStorage(SharedPreferences sharedPreferences) {
-        List<String> list = new ArrayList<>(sharedPreferences.getStringSet(HASHES, new HashSet<String>()));
-        Collections.sort(list);
-        return list;
+        List<String> hashes = new ArrayList<>(sharedPreferences.getStringSet(HASHES, new HashSet<String>()));
+//        List<HashNameTuple> hashNameTuples = new ArrayList<>(hashes.size());
+//        List<String> sortedHashes = new ArrayList<>(hashes.size());
+//        for (int i = 0; i < hashes.size(); i++) {
+//            String hash =  hashes.get(i);
+//            hashNameTuples.add(new HashNameTuple(hash, dashboardNamesPerHash.get(hash)));
+//        }
+//        Collections.sort(hashNameTuples, getHashNameTupleComparator());
+//        for (int i = 0; i < hashNameTuples.size(); i++) {
+//            HashNameTuple hashNameTuple =  hashNameTuples.get(i);
+//            sortedHashes.add(hashNameTuple.getName());
+//        }
+        return hashes;
     }
 
     public boolean hasWriteModeInLocalStorage(SharedPreferences sharedPreferences, String hash) {
@@ -289,6 +319,17 @@ public class ScodashService {
             }
             return 0;
 
+        }
+    }
+
+    class HashNameComparator implements Comparator<HashNameTuple> {
+
+        @Override
+        public int compare(HashNameTuple item1, HashNameTuple item2) {
+            if (item1 != null && item1.getName() != null && item2 != null && item2.getName() != null) {
+                return item1.getName().compareTo(item2.getName());
+            }
+            return 0;
         }
     }
 
