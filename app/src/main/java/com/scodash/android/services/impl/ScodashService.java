@@ -269,7 +269,7 @@ public class ScodashService {
         Collections.sort(hashNameTuples, getHashNameTupleComparator());
         for (int i = 0; i < hashNameTuples.size(); i++) {
             HashNameTuple hashNameTuple =  hashNameTuples.get(i);
-            sortedHashes.add(hashNameTuple.getName());
+            sortedHashes.add(hashNameTuple.getHash());
         }
         return sortedHashes;
     }
