@@ -262,18 +262,18 @@ public class ScodashService {
 
     public List<String> getHashesFromLocalStorage(SharedPreferences sharedPreferences) {
         List<String> hashes = new ArrayList<>(sharedPreferences.getStringSet(HASHES, new HashSet<String>()));
-//        List<HashNameTuple> hashNameTuples = new ArrayList<>(hashes.size());
-//        List<String> sortedHashes = new ArrayList<>(hashes.size());
-//        for (int i = 0; i < hashes.size(); i++) {
-//            String hash =  hashes.get(i);
-//            hashNameTuples.add(new HashNameTuple(hash, dashboardNamesPerHash.get(hash)));
-//        }
-//        Collections.sort(hashNameTuples, getHashNameTupleComparator());
-//        for (int i = 0; i < hashNameTuples.size(); i++) {
-//            HashNameTuple hashNameTuple =  hashNameTuples.get(i);
-//            sortedHashes.add(hashNameTuple.getName());
-//        }
-        return hashes;
+        List<HashNameTuple> hashNameTuples = new ArrayList<>(hashes.size());
+        List<String> sortedHashes = new ArrayList<>(hashes.size());
+        for (int i = 0; i < hashes.size(); i++) {
+            String hash =  hashes.get(i);
+            hashNameTuples.add(new HashNameTuple(hash, dashboardNamesPerHash.get(hash)));
+        }
+        Collections.sort(hashNameTuples, getHashNameTupleComparator());
+        for (int i = 0; i < hashNameTuples.size(); i++) {
+            HashNameTuple hashNameTuple =  hashNameTuples.get(i);
+            sortedHashes.add(hashNameTuple.getName());
+        }
+        return sortedHashes;
     }
 
     public boolean hasWriteModeInLocalStorage(SharedPreferences sharedPreferences, String hash) {

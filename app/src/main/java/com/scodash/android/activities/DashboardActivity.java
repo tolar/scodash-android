@@ -128,6 +128,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
 
         updateTextViews(dashboard);
+        itemsAdapter.notifyDataSetChanged();
 
         RadioGroup radioGroupView = findViewById(R.id.sort);
         radioGroupView.setOnCheckedChangeListener((group, checkedId) -> {
@@ -138,9 +139,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             }
             itemsAdapter.notifyDataSetChanged();
         });
-
-
-
 
         scodashService.addCurrentDashboardChangeListener(this);
     }
