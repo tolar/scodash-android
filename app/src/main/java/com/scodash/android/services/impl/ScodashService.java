@@ -2,7 +2,6 @@ package com.scodash.android.services.impl;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -122,7 +121,6 @@ public class ScodashService {
     public void setCurrentDashboard(Dashboard dashboard) {
         currentDashboard = dashboard;
         if (dashboard != null) {
-            Log.d("setCurrentDashboard", dashboard.toString());
             dashboardNamesPerHash.put(dashboard.getHash(), dashboard.getName());
             notifyListener();
         }

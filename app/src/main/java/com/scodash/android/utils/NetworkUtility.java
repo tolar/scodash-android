@@ -13,21 +13,19 @@ public class NetworkUtility {
 
     public static boolean isNetWorkAvailableNow(Context context) {
 
-        return true;
-//
-//        boolean isNetworkAvailable = false;
-//
-//        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//        isWifiEnable = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
-//        isMobileNetworkAvailable = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected();
-//
-//        if (isWifiEnable || isMobileNetworkAvailable) {
-//            if (isOnline())
-//                isNetworkAvailable = true;
-//        }
-//
-//        return isNetworkAvailable;
+        boolean isNetworkAvailable = false;
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        isWifiEnable = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+        isMobileNetworkAvailable = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected();
+
+        if (isWifiEnable || isMobileNetworkAvailable) {
+            if (isOnline())
+                isNetworkAvailable = true;
+        }
+
+        return isNetworkAvailable;
 
     }
 

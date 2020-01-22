@@ -8,7 +8,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
@@ -54,7 +53,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("DashboardActivity","onCreate");
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
@@ -289,7 +287,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     @Override
     public void currentDashboardChanged(final Dashboard dashboard) {
-        Log.d("currentDashboardChanged", dashboard.toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
