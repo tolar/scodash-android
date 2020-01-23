@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
@@ -21,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
-import com.scodash.android.services.impl.CurrentDashboardChangeListener;
+import com.scodash.android.services.impl.DashboardChangeListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.services.impl.Sorting;
 import com.scodash.android.utils.NetworkUtility;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 
 import static android.graphics.Typeface.BOLD;
 
-public class DashboardActivity extends ScodashActivity implements CurrentDashboardChangeListener {
+public class DashboardActivity extends ScodashActivity implements DashboardChangeListener {
 
     // launching intent properties
     public static final String HASH = "hash";
@@ -50,9 +51,11 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     private String shareUrl;
 
     private boolean offline;
+    private String hash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
@@ -68,6 +71,18 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         setContentView(layoutId);
         setupToolbar();
 
+        loadDataAndShow();
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadDataAndShow();
+    }
+
+    private void loadDataAndShow() {
+        offline = !NetworkUtility.isNetWorkAvailableNow(this);
         if (offline) {
             showNoInternetSnackbarWithRetryAction();
         } else {
@@ -77,8 +92,6 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
     private void showDashboard() {
 
-        scodashService.setCurrentDashboard(null);
-
         itemsAdapter = new DashboardItemsAdapter(scodashService, this);
         RecyclerView itemsRecyler = findViewById(R.id.items);
         itemsRecyler.setAdapter(itemsAdapter);
@@ -86,7 +99,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         itemsRecyler.setLayoutManager(layoutManager);
 
-        final String hash = getHashFromIntent();
+        hash = getHashFromIntent();
         Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
         call.enqueue(new Callback<Dashboard>() {
             @Override
@@ -121,7 +134,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
 
         scodashService.populateAccessHash(dashboard);
         scodashService.putHashToLocalStorage(getScodashSharedPreferences(), dashboard.getHash());
-        scodashService.setCurrentDashboard(dashboard);
+        scodashService.addLoadedDashboard(dashboard.getHash(), dashboard);
         scodashService.connectToDashboardOnServer(dashboard.getHash());
 
 
@@ -138,12 +151,13 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
             itemsAdapter.notifyDataSetChanged();
         });
 
-        scodashService.addCurrentDashboardChangeListener(this);
+        scodashService.addDashboardChangeListener(hash, this);
     }
 
     @Override
     protected void onDestroy() {
-        scodashService.removeCurrentDashboardChangeListener(this);
+        Log.d("Dashboard activity", "onDestroy" );
+        scodashService.removeCurrentDashboardChangeListener(hash,this);
         super.onDestroy();
     }
 
@@ -231,8 +245,8 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
                 startMainActivity();
                 return true;
             case R.id.action_share_dashboard:
-                shareUrl = scodashService.getCurrentReadonlyDashboardUrl();
-                if (TextUtils.isEmpty(scodashService.getCurrentDashboard().getWriteHash())) {
+                shareUrl = scodashService.getReadonlyDashboardUrl(hash);
+                if (TextUtils.isEmpty(scodashService.getLoadedDashboard(hash).getWriteHash())) {
                     startSharing();
                 } else {
                     showShareDialog();
@@ -246,11 +260,11 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     private void showShareDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Share the dashboard");
-        shareUrl = scodashService.getCurrentReadonlyDashboardUrl();
+        shareUrl = scodashService.getReadonlyDashboardUrl(hash);
         dialog.setSingleChoiceItems(R.array.share_options,0, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                shareUrl = which == 0 ? scodashService.getCurrentReadonlyDashboardUrl() : scodashService.getCurrentWriteDashboardUrl();
+                shareUrl = which == 0 ? scodashService.getReadonlyDashboardUrl(hash) : scodashService.getWriteDashboardUrl(hash);
             }
         });
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -286,7 +300,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
     }
 
     @Override
-    public void currentDashboardChanged(final Dashboard dashboard) {
+    public void dashboardChanged(final Dashboard dashboard) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -296,4 +310,7 @@ public class DashboardActivity extends ScodashActivity implements CurrentDashboa
         });
     }
 
+    public String getHash() {
+        return hash;
+    }
 }

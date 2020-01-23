@@ -1,5 +1,6 @@
 package com.scodash.android.services.impl;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
@@ -50,10 +51,12 @@ public class ScodashService {
     private static final String USERNAME = "scodashUser";
     private static final String PASSWORD = "jacob";
 
-    private Dashboard currentDashboard;
+    //private Dashboard currentDashboard;
+    private Map<String, Dashboard> loadedDashboards = new HashMap<>();
     private Dashboard newDashboard;
 
-    private List<CurrentDashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
+    //private List<DashboardChangeListener> currentDashboardChangeListeners = new ArrayList<>();
+    private Map<String, List<DashboardChangeListener>> loadedDashboardChangeListeners = new HashMap<>();
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
@@ -97,12 +100,20 @@ public class ScodashService {
         serverRestService = retrofit.create(ServerRestService.class);
     }
 
-    public void addCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
-        this.currentDashboardChangeListeners.add(changeListener);
+    public void addDashboardChangeListener(String hash, DashboardChangeListener changeListener) {
+        List<DashboardChangeListener> dashboardChangeListeners = this.loadedDashboardChangeListeners.get(hash);
+        if (dashboardChangeListeners == null) {
+            dashboardChangeListeners = new ArrayList<>();
+            this.loadedDashboardChangeListeners.put(hash, dashboardChangeListeners);
+        }
+        dashboardChangeListeners.add(changeListener);
     }
 
-    public void removeCurrentDashboardChangeListener(CurrentDashboardChangeListener changeListener) {
-        this.currentDashboardChangeListeners.remove(changeListener);
+    public void removeCurrentDashboardChangeListener(String hash, DashboardChangeListener changeListener) {
+        List<DashboardChangeListener> dashboardChangeListeners = this.loadedDashboardChangeListeners.get(hash);
+        if (dashboardChangeListeners != null) {
+            dashboardChangeListeners.remove(changeListener);
+        }
     }
 
     public Call<Dashboard> createDashboard(Dashboard newDashboard) {
@@ -118,12 +129,9 @@ public class ScodashService {
         }
     }
 
-    public void setCurrentDashboard(Dashboard dashboard) {
-        currentDashboard = dashboard;
-        if (dashboard != null) {
-            dashboardNamesPerHash.put(dashboard.getHash(), dashboard.getName());
-            notifyListener();
-        }
+    public void addLoadedDashboard(String hash, Dashboard dashboard) {
+        loadedDashboards.put(hash, dashboard);
+        dashboardNamesPerHash.put(dashboard.getHash(), dashboard.getName());
     }
 
     public void connectToDashboardOnServer(String hash) {
@@ -134,32 +142,45 @@ public class ScodashService {
         serverWebsocketConnectionService.updateDashboard(dashboardUpdate);
     }
 
-    private void notifyListener() {
-        for (int i = 0; i < currentDashboardChangeListeners.size(); i++) {
-            CurrentDashboardChangeListener currentDashboardChangeListener = currentDashboardChangeListeners.get(i);
-            currentDashboardChangeListener.currentDashboardChanged(currentDashboard);
+    private void notifyListeners(String hash) {
+        List<DashboardChangeListener> listeners = loadedDashboardChangeListeners.get(hash);
+        if (listeners != null) {
+            for (int i = 0; i < listeners.size(); i++) {
+                DashboardChangeListener dashboardChangeListener = listeners.get(i);
+                dashboardChangeListener.dashboardChanged(loadedDashboards.get(hash));
+            }
         }
     }
 
-    public Dashboard getCurrentDashboard() {
-        return currentDashboard;
+    public Dashboard getLoadedDashboard(String hash) {
+        return loadedDashboards.get(hash);
     }
 
-    public String getCurrentWriteDashboardUrl(){
-        return "https://www.scodash.com/dashboard/" + currentDashboard.getWriteHash();
+    public String getWriteDashboardUrl(String hash) {
+        Dashboard dashboard = loadedDashboards.get(hash);
+        if (dashboard != null) {
+            return "https://www.scodash.com/dashboard/" + dashboard.getWriteHash();
+        } else {
+            return null;
+        }
     }
 
-    public String getCurrentReadonlyDashboardUrl(){
-        return "https://www.scodash.com/dashboard/" + currentDashboard.getReadonlyHash();
+    public String getReadonlyDashboardUrl(String hash) {
+        Dashboard dashboard = loadedDashboards.get(hash);
+        if (dashboard != null) {
+            return "https://www.scodash.com/dashboard/" + dashboard.getReadonlyHash();
+        } else {
+            return null;
+        }
     }
 
     public Call<Dashboard> getRemoteDashboardByHash(String hash) {
         return serverRestService.getRemoteDashboardByHash(hash);
     }
 
-    public Item getCurrentItem(int index, Sorting sorting) {
+    public Item getItem(String hash, int index, Sorting sorting) {
         List itemsList = new ArrayList<>();
-        itemsList.addAll(currentDashboard.getItems());
+        itemsList.addAll(loadedDashboards.get(hash).getItems());
         if (sorting == Sorting.SCORE) {
             Collections.sort(itemsList, getScoreComparator());
         } else {
@@ -189,25 +210,23 @@ public class ScodashService {
         return hashNameTupleComparator;
     }
 
-    public int getCurrentDashboardItemCount() {
-        if (currentDashboard == null) {
+    public int getDashboardItemCount(String hash) {
+        Dashboard dashboard = loadedDashboards.get(hash);
+        if (dashboard == null) {
             return 0;
         }
-        return currentDashboard.getItems().size();
+        return dashboard.getItems().size();
     }
 
 
+    @SuppressLint("CheckResult")
     private void connectToServer(String hash) {
         serverWebsocketConnectionService = serverWebsocketServiceProvider.getInstance(hash);
         serverWebsocketConnectionService.receiveDashboardUpdate().subscribe(new Consumer<Dashboard>() {
             @Override
             public void accept(Dashboard dashboard) {
-                // check that message is for current dashboard
-                if (currentDashboard == null || isHashForDashboard(currentDashboard.getHash(), dashboard)) {
-                    // if so, we update also current dashboard
-                    populateAccessHash(dashboard);
-                    setCurrentDashboard(dashboard);
-                }
+                addLoadedDashboard(hash, dashboard);
+                notifyListeners(hash);
             }
         });
         serverWebsocketConnectionService.observeWebsocketEvent().subscribe(new Consumer<WebSocket.Event>() {
@@ -216,19 +235,6 @@ public class ScodashService {
             }
         });
     }
-
-    private boolean isHashForDashboard(String hash, Dashboard dashboard) {
-        if (hash == null || dashboard == null) {
-            return false;
-        }
-        if (hash.equals(dashboard.getReadonlyHash()) && TextUtils.isEmpty(dashboard.getWriteHash())
-                || hash.equals(dashboard.getWriteHash())) {
-            return true;
-        }
-        return false;
-    }
-
-
 
     public void putHashToLocalStorage(SharedPreferences sharedPreferences, String hash) {
         addHashToLocalStorage(sharedPreferences, hash);

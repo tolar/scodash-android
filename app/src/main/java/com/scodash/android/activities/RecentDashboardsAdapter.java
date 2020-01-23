@@ -54,7 +54,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
                 if (response.isSuccessful()) {
                     handleDashboardFromServer(viewHolder, hash, response.body());
                 } else {
-                    scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                    //scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
                 }
             }
 

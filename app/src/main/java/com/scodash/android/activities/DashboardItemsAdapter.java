@@ -27,13 +27,13 @@ import java.util.Date;
 public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAdapter.ViewHolder> {
 
     private final ScodashService scodashService;
-    private final ScodashActivity scodashActivity;
+    private final DashboardActivity dashboardActivity;
 
     private Sorting sorting = Sorting.AZ;
 
-    public DashboardItemsAdapter(ScodashService scodashService, ScodashActivity scodashActivity) {
+    public DashboardItemsAdapter(ScodashService scodashService, DashboardActivity dashboardActivity) {
         this.scodashService = scodashService;
-        this.scodashActivity = scodashActivity;
+        this.dashboardActivity = dashboardActivity;
     }
 
     @NonNull
@@ -48,21 +48,21 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
         LinearLayout itemLineView = viewHolder.itemView.findViewById(R.id.item_line);
         // set item name
         TextView nameTextView = itemLineView.findViewById(R.id.item_name);
-        final Item item = scodashService.getCurrentItem(index, sorting);
+        final Item item = scodashService.getItem(dashboardActivity.getHash(), index, sorting);
         nameTextView.setText(item.getName());
         // set item score
         TextView scoreTextView = itemLineView.findViewById(R.id.score_text);
         scoreTextView.setText(String.valueOf(item.getScore()));
 
-        final Dashboard currentDashboard = scodashService.getCurrentDashboard();
+        final Dashboard currentDashboard = scodashService.getLoadedDashboard(dashboardActivity.getHash());
 
         if (!TextUtils.isEmpty(currentDashboard.getWriteHash())) {
             View incBtnView = itemLineView.findViewById(R.id.inc_btn);
             incBtnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!NetworkUtility.isNetWorkAvailableNow(scodashActivity)) {
-                        scodashActivity.recreate();
+                    if (!NetworkUtility.isNetWorkAvailableNow(dashboardActivity)) {
+                        dashboardActivity.recreate();
                         return;
                     }
                     item.setScore(item.getScore() + 1);
@@ -76,8 +76,8 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
             decBtnView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!NetworkUtility.isNetWorkAvailableNow(scodashActivity)) {
-                        scodashActivity.recreate();
+                    if (!NetworkUtility.isNetWorkAvailableNow(dashboardActivity)) {
+                        dashboardActivity.recreate();
                         return;
                     }
                     if (item.getScore() > 0) {
@@ -136,7 +136,7 @@ public class DashboardItemsAdapter extends RecyclerView.Adapter<DashboardItemsAd
 
     @Override
     public int getItemCount() {
-        return scodashService.getCurrentDashboardItemCount();
+        return scodashService.getDashboardItemCount(dashboardActivity.getHash());
     }
 
     public Sorting getSorting() {

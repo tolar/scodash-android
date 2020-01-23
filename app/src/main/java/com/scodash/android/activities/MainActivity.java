@@ -27,13 +27,14 @@ public class MainActivity extends ScodashActivity {
     @Inject
     ScodashService scodashService;
     private Toolbar toolbar;
+    private boolean offline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
 
-        boolean offline = !NetworkUtility.isNetWorkAvailableNow(this);
+        offline = !NetworkUtility.isNetWorkAvailableNow(this);
 
         int layoutId = R.layout.activity_main;
         if (offline) {
@@ -49,6 +50,17 @@ public class MainActivity extends ScodashActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setTitle("");
 
+        loadDataAndShow();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        offline = !NetworkUtility.isNetWorkAvailableNow(this);
+        loadDataAndShow();
+    }
+
+    private void loadDataAndShow() {
         if (offline) {
             showNoInternetSnackbarWithRetryAction();
         } else {
