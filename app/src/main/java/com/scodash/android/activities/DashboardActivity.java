@@ -156,7 +156,6 @@ public class DashboardActivity extends ScodashActivity implements DashboardChang
 
     @Override
     protected void onDestroy() {
-        Log.d("Dashboard activity", "onDestroy" );
         scodashService.removeCurrentDashboardChangeListener(hash,this);
         super.onDestroy();
     }
