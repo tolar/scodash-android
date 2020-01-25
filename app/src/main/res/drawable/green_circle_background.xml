@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
-        <shape android:shape="oval" >
+        <shape android:shape="oval">
             <solid android:color="@color/blackScoreColor" />
             <size android:width="32dp" android:height="32dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/redRemoveColor" />
+            <solid android:color="@color/greenAddColor" />
             <size android:width="32dp" android:height="32dp" />
         </shape>
     </item>
