@@ -19,6 +19,9 @@ import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.services.impl.ScodashService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,6 +32,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     private final ScodashService scodashService;
     private final ScodashActivity scodashActivity;
     private Snackbar snackbar;
+    private final Map<String, Dashboard> dashboardMap = new HashMap<>();
 
     public RecentDashboardsAdapter(Context context, ScodashService scodashService, ScodashActivity scodashActivity) {
         this.context = context;
@@ -47,22 +51,27 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
 
         final String hash = scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).get(index);
-        final Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
-        call.enqueue(new Callback<Dashboard>() {
-            @Override
-            public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
-                if (response.isSuccessful()) {
-                    handleDashboardFromServer(viewHolder, hash, response.body());
-                } else {
-                    //scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+        if (!dashboardMap.containsKey(hash)) {
+            final Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
+            call.enqueue(new Callback<Dashboard>() {
+                @Override
+                public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
+                    if (response.isSuccessful()) {
+                        dashboardMap.put(hash, response.body());
+                        handleDashboardFromServer(viewHolder, hash, response.body());
+                    } else {
+                        //scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Dashboard> call, Throwable t) {
-                call.cancel();
-            }
-        });
+                @Override
+                public void onFailure(Call<Dashboard> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        } else {
+            handleDashboardFromServer(viewHolder, hash, dashboardMap.get(hash));
+        }
 
 
     }
