@@ -5,73 +5,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.NewDashboardActivity">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/new_items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="5dp"
-            android:scrollbars="none" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".activities.NewDashboardActivity">
 
-            <EditText
-                android:id="@+id/new_item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="0dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/new_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_marginBottom="5dp"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="0dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="9"
-                android:gravity="center_vertical"
-                android:hint="New item"
-                android:inputType="text"
-                android:maxLength="50"
-                android:maxLines="1" />
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/new_item_add_button"
-                style="@style/AddButton"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:onClick="addItem" />
+                <EditText
+                    android:id="@+id/new_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_weight="9"
+                    android:gravity="center_vertical"
+                    android:hint="New item"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:maxLines="1" />
+
+                <ImageButton
+                    android:id="@+id/new_item_add_button"
+                    style="@style/AddButton"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:onClick="addItem" />
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:id="@+id/bottom_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
+                <ImageButton
+                    style="@style/BackButton"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:onClick="itemsStepPrevButtonClicked" />
+
+                <Button
+                    style="@style/NextButton"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:onClick="itemsStepNextButtonClicked" />
+            </FrameLayout>
+
         </LinearLayout>
-
-
-        <FrameLayout
-            android:id="@+id/bottom_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
-
-            <ImageButton
-                style="@style/BackButton"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:onClick="itemsStepPrevButtonClicked" />
-
-            <Button
-                style="@style/NextButton"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:onClick="itemsStepNextButtonClicked" />
-        </FrameLayout>
-
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </ScrollView>
