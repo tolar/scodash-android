@@ -17,22 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
+import com.scodash.android.services.impl.RecentsLoadedListener;
 import com.scodash.android.services.impl.ScodashService;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> {
+public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> implements RecentsLoadedListener {
 
     private final Context context;
     private final ScodashService scodashService;
     private final ScodashActivity scodashActivity;
     private Snackbar snackbar;
-    private final Map<String, Dashboard> dashboardMap = new HashMap<>();
 
     public RecentDashboardsAdapter(Context context, ScodashService scodashService, ScodashActivity scodashActivity) {
         this.context = context;
@@ -50,40 +43,43 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
 
-        final String hash = scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).get(index);
-        if (!dashboardMap.containsKey(hash)) {
-            final Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
-            call.enqueue(new Callback<Dashboard>() {
-                @Override
-                public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
-                    if (response.isSuccessful()) {
-                        dashboardMap.put(hash, response.body());
-                        handleDashboardFromServer(viewHolder, hash, response.body());
-                    } else {
-                        //scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
-                    }
-                }
+        Dashboard dashboard = scodashService.getRecentDashboard(index);
+        handleDashboardFromServer(viewHolder, dashboard);
 
-                @Override
-                public void onFailure(Call<Dashboard> call, Throwable t) {
-                    call.cancel();
-                }
-            });
-        } else {
-            handleDashboardFromServer(viewHolder, hash, dashboardMap.get(hash));
-        }
+
+//        final String hash = scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).get(index);
+//        if (!scodashService.getDashboardMap().containsKey(hash)) {
+//            final Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
+//            call.enqueue(new Callback<Dashboard>() {
+//                @Override
+//                public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
+//                    if (response.isSuccessful()) {
+//                        scodashService.getDashboardMap().put(hash, response.body());
+//                        handleDashboardFromServer(viewHolder, hash, response.body());
+//                    } else {
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Dashboard> call, Throwable t) {
+//                    call.cancel();
+//                }
+//            });
+//        } else {
+//            handleDashboardFromServer(viewHolder, hash, scodashService.getDashboardMap().get(hash));
+//        }
 
 
     }
 
-    private void handleDashboardFromServer(@NonNull ViewHolder viewHolder, String hash, Dashboard dashboard) {
+    private void handleDashboardFromServer(@NonNull ViewHolder viewHolder, Dashboard dashboard) {
         CardView itemView = viewHolder.itemView;
         TextView recentName = itemView.findViewById(R.id.name);
         recentName.setText(dashboard.getName());
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDashboardActivity(hash);
+                startDashboardActivity(dashboard.getHash());
             }
         });
         TextView recentDescription = itemView.findViewById(R.id.description);
@@ -96,7 +92,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), dashboard.getHash());
 
                 snackbar = Snackbar.make(scodashActivity.findViewById(R.id.coordinator), R.string.recent_dashboard_removed, Snackbar.LENGTH_LONG);
                 snackbar.getView().setBackgroundColor(ContextCompat.getColor(scodashActivity, R.color.greenAddColor));
@@ -106,7 +102,7 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
                 snackbar.setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        scodashService.putHashToLocalStorage(scodashActivity.getScodashSharedPreferences(), hash);
+                        scodashService.putHashToLocalStorage(scodashActivity.getScodashSharedPreferences(), dashboard.getHash());
                         handleRecentsChanged();
                     }
                 });
@@ -131,7 +127,12 @@ class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapt
 
     @Override
     public int getItemCount() {
-        return scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).size();
+        return scodashService.getLoadedDashboardsSize();
+    }
+
+    @Override
+    public void recentLoaded() {
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

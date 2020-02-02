@@ -6,9 +6,9 @@ import android.text.TextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.scodash.android.activities.RecentDashboardsAdapter;
 import com.scodash.android.dto.Dashboard;
 import com.scodash.android.dto.DashboardUpdateDto;
-import com.scodash.android.dto.HashNameTuple;
 import com.scodash.android.dto.Item;
 import com.scodash.android.services.ServerRestService;
 import com.scodash.android.services.ServerWebsocketConnectionService;
@@ -33,8 +33,8 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -60,13 +60,15 @@ public class ScodashService {
 
     private Comparator<Item> azComparator;
     private Comparator<Item> scoreComparator;
-    private Comparator<HashNameTuple> hashNameTupleComparator;
+    private Comparator<Dashboard> dashboardComparator;
 
     private ServerWebsocketConnectionService serverWebsocketConnectionService;
 
     private ServerRestService serverRestService;
 
-    private Map<String, String> dashboardNamesPerHash = new HashMap<>();
+    //private Map<String, String> dashboardNamesPerHash = new HashMap<>();
+    private final Map<String, Dashboard> dashboardMap = new HashMap<>();
+
 
     @Inject
     ServerWebsocketServiceProvider serverWebsocketServiceProvider;
@@ -78,12 +80,11 @@ public class ScodashService {
 
     private void initServerRestService() {
 
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
+        //HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        //loggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(new BasicAuthInterceptor(USERNAME, PASSWORD))
-                .addInterceptor(loggingInterceptor)
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -131,7 +132,7 @@ public class ScodashService {
 
     public void addLoadedDashboard(String hash, Dashboard dashboard) {
         loadedDashboards.put(hash, dashboard);
-        dashboardNamesPerHash.put(dashboard.getHash(), dashboard.getName());
+        dashboardMap.put(dashboard.getHash(), dashboard);
     }
 
     public void connectToDashboardOnServer(String hash) {
@@ -154,6 +155,10 @@ public class ScodashService {
 
     public Dashboard getLoadedDashboard(String hash) {
         return loadedDashboards.get(hash);
+    }
+
+    public int getLoadedDashboardsSize() {
+        return loadedDashboards.size();
     }
 
     public String getWriteDashboardUrl(String hash) {
@@ -203,11 +208,11 @@ public class ScodashService {
         return scoreComparator;
     }
 
-    public Comparator<HashNameTuple> getHashNameTupleComparator() {
-        if (hashNameTupleComparator == null) {
-            hashNameTupleComparator = new HashNameComparator();
+    public Comparator<Dashboard> getDashboardComparator() {
+        if (dashboardComparator == null) {
+            dashboardComparator = new DashboardComparator();
         }
-        return hashNameTupleComparator;
+        return dashboardComparator;
     }
 
     public int getDashboardItemCount(String hash) {
@@ -266,22 +271,29 @@ public class ScodashService {
 
     public List<String> getHashesFromLocalStorage(SharedPreferences sharedPreferences) {
         List<String> hashes = new ArrayList<>(sharedPreferences.getStringSet(HASHES, new HashSet<String>()));
-        List<HashNameTuple> hashNameTuples = new ArrayList<>(hashes.size());
-        List<String> sortedHashes = new ArrayList<>(hashes.size());
-        for (int i = 0; i < hashes.size(); i++) {
-            String hash =  hashes.get(i);
-            hashNameTuples.add(new HashNameTuple(hash, dashboardNamesPerHash.get(hash)));
-        }
-        Collections.sort(hashNameTuples, getHashNameTupleComparator());
-        for (int i = 0; i < hashNameTuples.size(); i++) {
-            HashNameTuple hashNameTuple =  hashNameTuples.get(i);
-            sortedHashes.add(hashNameTuple.getHash());
-        }
-        return sortedHashes;
+        return hashes;
+//        Log.d("ScodashService", "hashes:" + hashes.toString());
+//        List<HashNameTuple> hashNameTuples = new ArrayList<>(hashes.size());
+//        List<String> sortedHashes = new ArrayList<>(hashes.size());
+//        for (int i = 0; i < hashes.size(); i++) {
+//            String hash =  hashes.get(i);
+//            hashNameTuples.add(new HashNameTuple(hash, dashboardMap.get(hash).getName()));
+//        }
+//        Collections.sort(hashNameTuples, getHashNameTupleComparator());
+//        Log.d("ScodashService", "sorted hashNameTuples:" + hashNameTuples.toString());
+//        for (int i = 0; i < hashNameTuples.size(); i++) {
+//            HashNameTuple hashNameTuple =  hashNameTuples.get(i);
+//            sortedHashes.add(hashNameTuple.getHash());
+//        }
+//        return sortedHashes;
     }
 
     public boolean hasWriteModeInLocalStorage(SharedPreferences sharedPreferences, String hash) {
         return getHashesFromLocalStorage(sharedPreferences).contains(hash);
+    }
+
+    public Map<String, Dashboard> getDashboardMap() {
+        return dashboardMap;
     }
 
     public Dashboard getNewDashboard() {
@@ -293,6 +305,38 @@ public class ScodashService {
 
     public void resetNewDashbord() {
         newDashboard = new Dashboard();
+    }
+
+    public void loadRecentDashboards(SharedPreferences sharedPreferences, RecentsLoadedListener recentsLoadedListener) {
+        final List<String> hashes = getHashesFromLocalStorage(sharedPreferences);
+        for (int i = 0; i < hashes.size(); i++) {
+            String hash = hashes.get(i);
+            Call<Dashboard> call = getRemoteDashboardByHash(hash);
+            call.enqueue(new Callback<Dashboard>() {
+                @Override
+                public void onResponse(Call<Dashboard> call, retrofit2.Response<Dashboard> response) {
+                    if (response.isSuccessful()) {
+                        Dashboard dashboard = response.body();
+                        populateAccessHash(dashboard);
+                        putHashToLocalStorage(sharedPreferences, dashboard.getHash());
+                        addLoadedDashboard(dashboard.getHash(), dashboard);
+                        recentsLoadedListener.recentLoaded();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Dashboard> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        }
+    }
+
+    public Dashboard getRecentDashboard(int index) {
+        List itemsList = new ArrayList<>();
+        itemsList.addAll(loadedDashboards.values());
+        Collections.sort(itemsList, getDashboardComparator());
+        return (Dashboard) itemsList.get(index);
     }
 
     class AzComparator implements Comparator<Item> {
@@ -326,12 +370,20 @@ public class ScodashService {
         }
     }
 
-    class HashNameComparator implements Comparator<HashNameTuple> {
+    class DashboardComparator implements Comparator<Dashboard> {
 
         @Override
-        public int compare(HashNameTuple item1, HashNameTuple item2) {
+        public int compare(Dashboard item1, Dashboard item2) {
+            int compResByName = 0;
             if (item1 != null && item1.getName() != null && item2 != null && item2.getName() != null) {
-                return item1.getName().compareTo(item2.getName());
+                compResByName = item1.getName().compareTo(item2.getName());
+                if (compResByName != 0) {
+                    return compResByName;
+                }
+                if (TextUtils.isEmpty(item1.getWriteHash()) && !TextUtils.isEmpty(item2.getWriteHash())) {
+                    return 1;
+                }
+
             }
             return 0;
         }

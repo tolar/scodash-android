@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
+import com.scodash.android.services.impl.RecentsLoadedListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.utils.NetworkUtility;
 
@@ -71,6 +72,7 @@ public class MainActivity extends ScodashActivity {
     private void showRecents() {
         if (scodashService.getHashesFromLocalStorage(getScodashSharedPreferences()).size() > 0) {
 
+
             RecyclerView itemsRecyler = findViewById(R.id.recents);
             recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), scodashService, this);
             itemsRecyler.setAdapter(recentDashboardsAdapter);
@@ -80,6 +82,8 @@ public class MainActivity extends ScodashActivity {
             ViewGroup intro_container = findViewById(R.id.intro_container);
             intro_container.removeAllViews();
             toolbar.setVisibility(View.VISIBLE);
+
+            scodashService.loadRecentDashboards(getScodashSharedPreferences(), recentDashboardsAdapter);
         } else {
             ViewGroup recents_container = findViewById(R.id.recents_container);
             recents_container.removeAllViews();
@@ -116,6 +120,7 @@ public class MainActivity extends ScodashActivity {
         Intent intent = new Intent(this, NewDashboardActivity.class);
         startActivity(intent);
     }
+
 
 
 }
