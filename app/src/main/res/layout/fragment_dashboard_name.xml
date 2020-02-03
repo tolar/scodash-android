@@ -19,8 +19,9 @@
             <EditText
                 android:id="@+id/dashboard_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:hint="@string/dashboard_name_hint"
+                android:labelFor="@id/name_input_layout"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -33,8 +34,9 @@
             <EditText
                 android:id="@+id/dashboard_description"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:hint="@string/dashboard_description_hint"
+                android:labelFor="@id/description_input_layout"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 

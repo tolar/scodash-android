@@ -19,14 +19,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">48dp</item>
         <item name="android:padding">0dp</item>
+        <item name="android:contentDescription">Back</item>
     </style>
 
     <style name="RemoveButton" parent="@style/Widget.AppCompat.ImageButton">
-        <item name="android:src">@drawable/baseline_clear_black_24</item>
+        <item name="android:src">@drawable/baseline_clear_black_36</item>
         <item name="android:background">@color/colorWhiteBackground</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:padding">0dp</item>
+        <item name="android:contentDescription">Remove</item>
     </style>
 
     <style name="AddButton" parent="@style/Widget.AppCompat.ImageButton">

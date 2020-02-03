@@ -76,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        android:contentDescription="@string/create_dashboard"
         android:src="@drawable/round_add_white_24"
         android:onClick="onClickAdd"/>
 

@@ -17,9 +17,11 @@
             android:id="@+id/author_name"
             android:inputType="text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:maxLines="1"
-            android:hint="@string/author_name_hint" />
+            android:hint="@string/author_name_hint"
+            android:labelFor="@id/author_name_input_layout"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,9 +35,10 @@
             android:id="@+id/author_email"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:maxLines="1"
             android:hint="@string/author_email_hint"
+            android:labelFor="@id/author_email_input_layout"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
