@@ -110,7 +110,7 @@ public class ScodashService {
         dashboardChangeListeners.add(changeListener);
     }
 
-    public void removeCurrentDashboardChangeListener(String hash, DashboardChangeListener changeListener) {
+    public void removeDashboardChangeListener(String hash, DashboardChangeListener changeListener) {
         List<DashboardChangeListener> dashboardChangeListeners = this.loadedDashboardChangeListeners.get(hash);
         if (dashboardChangeListeners != null) {
             dashboardChangeListeners.remove(changeListener);

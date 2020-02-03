@@ -113,10 +113,14 @@ public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboar
     }
 
     private void handleRecentsChanged() {
+        scodashService.loadRecentDashboards(scodashActivity.getScodashSharedPreferences(), this);
         notifyDataSetChanged();
+        /*
         if (scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).size() == 0) {
             scodashActivity.recreate();
         }
+
+         */
     }
 
     private void startDashboardActivity(String hash) {

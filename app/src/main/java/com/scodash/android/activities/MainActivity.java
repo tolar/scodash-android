@@ -51,13 +51,18 @@ public class MainActivity extends ScodashActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setTitle("");
 
-        loadDataAndShow();
+        //loadDataAndShow();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        offline = !NetworkUtility.isNetWorkAvailableNow(this);
+        boolean newOffline = !NetworkUtility.isNetWorkAvailableNow(this);
+        if (newOffline != offline) {
+            offline = newOffline;
+            recreate();
+            return;
+        }
         loadDataAndShow();
     }
 

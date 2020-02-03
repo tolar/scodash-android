@@ -70,13 +70,19 @@ public class DashboardActivity extends ScodashActivity implements DashboardChang
         setContentView(layoutId);
         setupToolbar();
 
-        loadDataAndShow();
+        //loadDataAndShow();
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
+        boolean newOffline = !NetworkUtility.isNetWorkAvailableNow(this);
+        if (newOffline != offline) {
+            offline = newOffline;
+            recreate();
+            return;
+        }
         loadDataAndShow();
     }
 
@@ -155,7 +161,7 @@ public class DashboardActivity extends ScodashActivity implements DashboardChang
 
     @Override
     protected void onDestroy() {
-        scodashService.removeCurrentDashboardChangeListener(hash,this);
+        scodashService.removeDashboardChangeListener(hash,this);
         super.onDestroy();
     }
 
