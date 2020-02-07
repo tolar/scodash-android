@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
-import com.scodash.android.services.impl.RecentsLoadedListener;
 import com.scodash.android.services.impl.ScodashService;
 import com.scodash.android.utils.NetworkUtility;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,12 +24,15 @@ import dagger.android.AndroidInjection;
 
 public class MainActivity extends ScodashActivity {
 
-    private RecentDashboardsAdapter recentDashboardsAdapter;
-
     @Inject
     ScodashService scodashService;
+
     private Toolbar toolbar;
+    private RecentDashboardsAdapter recentDashboardsAdapter;
+
     private boolean offline;
+    private ViewGroup intro_container;
+    private ViewGroup recents_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,10 @@ public class MainActivity extends ScodashActivity {
         actionBar.setLogo(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setTitle("");
+
+        recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), scodashService, this);
+        scodashService.addRecentsChangeListener(recentDashboardsAdapter);
+
 
         //loadDataAndShow();
     }
@@ -75,23 +83,26 @@ public class MainActivity extends ScodashActivity {
     }
 
     private void showRecents() {
-        if (scodashService.getHashesFromLocalStorage(getScodashSharedPreferences()).size() > 0) {
 
+        intro_container = findViewById(R.id.intro_container);
+        recents_container = findViewById(R.id.recents_container);
+
+        List<String> hashes = scodashService.getHashesFromLocalStorage(getScodashSharedPreferences());
+        if (hashes.size() > 0) {
+
+            intro_container.setVisibility(View.INVISIBLE);
+            recents_container.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
 
             RecyclerView itemsRecyler = findViewById(R.id.recents);
-            recentDashboardsAdapter = new RecentDashboardsAdapter(getApplicationContext(), scodashService, this);
             itemsRecyler.setAdapter(recentDashboardsAdapter);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             itemsRecyler.setLayoutManager(layoutManager);
 
-            ViewGroup intro_container = findViewById(R.id.intro_container);
-            intro_container.removeAllViews();
-            toolbar.setVisibility(View.VISIBLE);
-
-            scodashService.loadRecentDashboards(getScodashSharedPreferences(), recentDashboardsAdapter);
+            scodashService.loadRecentDashboards(getScodashSharedPreferences());
         } else {
-            ViewGroup recents_container = findViewById(R.id.recents_container);
-            recents_container.removeAllViews();
+            intro_container.setVisibility(View.VISIBLE);
+            recents_container.setVisibility(View.INVISIBLE);
             toolbar.setVisibility(View.INVISIBLE);
         }
     }
@@ -125,7 +136,6 @@ public class MainActivity extends ScodashActivity {
         Intent intent = new Intent(this, NewDashboardActivity.class);
         startActivity(intent);
     }
-
 
 
 }

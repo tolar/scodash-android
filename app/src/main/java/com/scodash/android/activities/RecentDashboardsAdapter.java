@@ -17,10 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.scodash.android.R;
 import com.scodash.android.dto.Dashboard;
-import com.scodash.android.services.impl.RecentsLoadedListener;
+import com.scodash.android.services.impl.RecentsChangeListener;
 import com.scodash.android.services.impl.ScodashService;
 
-public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> implements RecentsLoadedListener {
+
+public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboardsAdapter.ViewHolder> implements RecentsChangeListener {
 
     private final Context context;
     private final ScodashService scodashService;
@@ -42,37 +43,11 @@ public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboar
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int index) {
-
-        Dashboard dashboard = scodashService.getRecentDashboard(index);
-        handleDashboardFromServer(viewHolder, dashboard);
-
-
-//        final String hash = scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).get(index);
-//        if (!scodashService.getDashboardMap().containsKey(hash)) {
-//            final Call<Dashboard> call = scodashService.getRemoteDashboardByHash(hash);
-//            call.enqueue(new Callback<Dashboard>() {
-//                @Override
-//                public void onResponse(Call<Dashboard> call, Response<Dashboard> response) {
-//                    if (response.isSuccessful()) {
-//                        scodashService.getDashboardMap().put(hash, response.body());
-//                        handleDashboardFromServer(viewHolder, hash, response.body());
-//                    } else {
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<Dashboard> call, Throwable t) {
-//                    call.cancel();
-//                }
-//            });
-//        } else {
-//            handleDashboardFromServer(viewHolder, hash, scodashService.getDashboardMap().get(hash));
-//        }
-
-
+        Dashboard dashboard = scodashService.getLoadedDashboard(index);
+        showRecentDashboad(viewHolder, dashboard);
     }
 
-    private void handleDashboardFromServer(@NonNull ViewHolder viewHolder, Dashboard dashboard) {
+    private void showRecentDashboad(@NonNull ViewHolder viewHolder, Dashboard dashboard) {
         CardView itemView = viewHolder.itemView;
         TextView recentName = itemView.findViewById(R.id.name);
         recentName.setText(dashboard.getName());
@@ -93,6 +68,9 @@ public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboar
             @Override
             public void onClick(View v) {
                 scodashService.removeHashFromLocaStorage(scodashActivity.getScodashSharedPreferences(), dashboard.getHash());
+                scodashService.removeLoadedDashboard(dashboard.getHash());
+                scodashService.closeConnetionToServer(dashboard.getHash());
+                scodashService.loadRecentDashboards(scodashActivity.getScodashSharedPreferences());
 
                 snackbar = Snackbar.make(scodashActivity.findViewById(R.id.coordinator), R.string.recent_dashboard_removed, Snackbar.LENGTH_LONG);
                 snackbar.getView().setBackgroundColor(ContextCompat.getColor(scodashActivity, R.color.greenAddColor));
@@ -103,16 +81,28 @@ public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboar
                     @Override
                     public void onClick(View v) {
                         scodashService.putHashToLocalStorage(scodashActivity.getScodashSharedPreferences(), dashboard.getHash());
-                        handleRecentsChanged();
+                        scodashService.loadRecentDashboards(scodashActivity.getScodashSharedPreferences());
+                    }
+                });
+                snackbar.addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        if (scodashService.getHashesFromLocalStorage(scodashActivity.getScodashSharedPreferences()).size() == 0) {
+                            scodashActivity.finish();
+                            scodashActivity.startActivity(new Intent(scodashActivity, MainActivity.class));
+                        }
                     }
                 });
                 snackbar.show();
-                handleRecentsChanged();
+
             }
         });
     }
 
-    private void handleRecentsChanged() {
+
+    /*
+    private void handleRecentHashsChanged() {
         scodashService.loadRecentDashboards(scodashActivity.getScodashSharedPreferences(), this);
         notifyDataSetChanged();
         /*
@@ -121,7 +111,7 @@ public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboar
         }
 
          */
-    }
+    //}
 
     private void startDashboardActivity(String hash) {
         Intent intent = new Intent(context, DashboardActivity.class);
@@ -134,9 +124,17 @@ public class RecentDashboardsAdapter extends RecyclerView.Adapter<RecentDashboar
         return scodashService.getLoadedDashboardsSize();
     }
 
+
     @Override
-    public void recentLoaded() {
-        notifyDataSetChanged();
+    public void recentsChanged() {
+        scodashActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
