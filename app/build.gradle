@@ -6,8 +6,8 @@ android {
         applicationId "com.scodash.android"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.0"
+        versionCode 9
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -35,6 +35,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.dagger:dagger:2.25.2'
     implementation 'com.google.dagger:dagger-android:2.25.2'
+    implementation 'com.google.dagger:dagger-android-support:2.25.2'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.25.2'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.25.2'
     implementation 'com.tinder.scarlet:lifecycle-android:0.1.9'

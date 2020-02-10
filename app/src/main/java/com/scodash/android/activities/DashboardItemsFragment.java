@@ -9,23 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scodash.android.R;
 import com.scodash.android.services.impl.ScodashService;
 
+import javax.inject.Inject;
 
-public class DashboardItemsFragment extends Fragment {
+import dagger.android.support.DaggerFragment;
 
-    private final ScodashService scodashService;
+public class DashboardItemsFragment extends DaggerFragment {
+
+    @Inject
+    public ScodashService scodashService;
 
     private NewDashboardItemsAdapter itemsAdapter;
 
-    public DashboardItemsFragment(ScodashService scodashService) {
-        this.scodashService = scodashService;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +40,8 @@ public class DashboardItemsFragment extends Fragment {
 
         return rootView;
     }
+
+
 
     private void attachItemsAdapter(View rootView) {
         RecyclerView itemsRecyler = rootView.findViewById(R.id.new_items);

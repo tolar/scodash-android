@@ -1,6 +1,7 @@
 package com.scodash.android;
 
 import com.scodash.android.activities.DashboardActivity;
+import com.scodash.android.activities.DashboardItemsFragment;
 import com.scodash.android.activities.MainActivity;
 import com.scodash.android.activities.NewDashboardActivity;
 
@@ -18,6 +19,11 @@ public abstract class ScodashApplicationModule {
 
     @ContributesAndroidInjector
     abstract MainActivity contributeMainActivityInjector();
+
+    @ContributesAndroidInjector
+    abstract DashboardItemsFragment contributeDashboardItemsFragmentInjector();
+
+
 
 
 

@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -53,9 +54,11 @@ public class NewDashboardActivity extends ScodashActivity {
 
     private ViewPager viewPager;
     private StepsPageAdapter stepsPageAdapter;
-    private DashboardItemsFragment dashboardItemsFragment;
     private Snackbar noItemSnackbard;
     private Snackbar noInternetSnackbar;
+    private DashboardNameFragment dashboardNameFragment;
+    private DashboardItemsFragment dashboardItemsFragment;
+    private DashboardAuthorFragment dashboardAuthorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +87,6 @@ public class NewDashboardActivity extends ScodashActivity {
         for(int i = 0; i < tabStrip.getChildCount(); i++) {
             tabStrip.getChildAt(i).setOnTouchListener((v, event) -> true);
         }
-
-        dashboardItemsFragment = new DashboardItemsFragment(scodashService);
 
     }
 
@@ -238,7 +239,7 @@ public class NewDashboardActivity extends ScodashActivity {
             scodashService.getNewDashboard().addItem(item);
             editText.setText("");
             dismissNoItemSnackbar();
-            dashboardItemsFragment.notifyItemsChanged();
+            notifyItemsFragment();
         }
         ScrollView scrollView = findViewById(R.id.new_items_scroll_view);
         FrameLayout buttonsLayoutView = findViewById(R.id.bottom_buttons);
@@ -248,6 +249,12 @@ public class NewDashboardActivity extends ScodashActivity {
                 scrollView.smoothScrollTo(0, buttonsLayoutView.getBottom());
             }
         });
+    }
+
+    private void notifyItemsFragment() {
+        if (dashboardItemsFragment != null) {
+            dashboardItemsFragment.notifyItemsChanged();
+        }
     }
 
     private void dismissNoItemSnackbar() {
@@ -266,7 +273,7 @@ public class NewDashboardActivity extends ScodashActivity {
         ViewParent viewParent = view.getParent();
         TextView itemToRemove = ((LinearLayout)viewParent).findViewById(R.id.item_name);
         scodashService.getNewDashboard().removeItem(itemToRemove.getText().toString());
-        dashboardItemsFragment.notifyItemsChanged();
+        notifyItemsFragment();
     }
 
     private class StepsPageAdapter extends FragmentPagerAdapter {
@@ -285,11 +292,29 @@ public class NewDashboardActivity extends ScodashActivity {
                 case NAME_TAB_POSITION:
                     return new DashboardNameFragment();
                 case ITEMS_TAB_POSITION:
-                    return dashboardItemsFragment;
+                    return new DashboardItemsFragment();
                 case AUTHOR_TAB_POSITION:
                     return new DashboardAuthorFragment();
             }
             return null;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            // save the appropriate reference depending on position
+            switch (position) {
+                case NAME_TAB_POSITION:
+                    dashboardNameFragment = (DashboardNameFragment) createdFragment;
+                    break;
+                case ITEMS_TAB_POSITION:
+                    dashboardItemsFragment = (DashboardItemsFragment) createdFragment;
+                    break;
+                case AUTHOR_TAB_POSITION:
+                    dashboardAuthorFragment = (DashboardAuthorFragment) createdFragment;
+                    break;
+            }
+            return createdFragment;
         }
 
         @Nullable

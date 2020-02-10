@@ -2,6 +2,7 @@ package com.scodash.android.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -17,8 +18,11 @@ public class NetworkUtility {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        isWifiEnable = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
-        isMobileNetworkAvailable = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected();
+        NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        isWifiEnable = wifiNetworkInfo != null && wifiNetworkInfo.isConnected();
+        NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        isMobileNetworkAvailable = mobileNetworkInfo != null && mobileNetworkInfo.isConnected();
+
 
         if (isWifiEnable || isMobileNetworkAvailable) {
             if (isOnline())
