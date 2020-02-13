@@ -4,10 +4,10 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.scodash.android"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.1"
+        versionCode 10
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -45,8 +45,8 @@ dependencies {
     implementation 'com.tinder.scarlet:websocket-okhttp:0.1.9'
     implementation 'com.tinder.scarlet:message-adapter-moshi:0.1.9'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
-    implementation 'com.squareup.retrofit2:converter-jackson:2.7.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.6.4'
     implementation 'joda-time:joda-time:2.10.5'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.10.1'
